@@ -18,6 +18,10 @@
                     <asp:TextBox runat="server" ID="txtNombre" CssClass="form-control" />
                 </div>
                 <div class="mb-3">
+                    <label for="txtDescripcion" class="form-label">Descripción</label>
+                    <asp:TextBox runat="server" ID="txtDescripcion" CssClass="form-control" TextMode="MultiLine" />
+                </div>
+                <div class="mb-3">
                     <label for="ddlMarca" class="form-label">Marca</label>
                     <asp:DropDownList ID="ddlMarca" CssClass="form-select" runat="server"></asp:DropDownList>
                 </div>
@@ -38,10 +42,10 @@
             <div class="col-6">
                 <div class="mb-3">
                     <label for="txtImagenUrl" class="form-label">URL Imagen</label>
-                    <asp:TextBox runat="server" ID="ID_txtImagenUrl" CssClass="form-control" 
-                        AutoPostBack="true" OnTextChanged="txtImagenUrl_TextChanged" />
+                    <asp:TextBox runat="server" ID="ID_txtImagenUrl" CssClass="form-control"
+                        AutoPostBack="true" OnTextChanged="ID_txtImagenUrl_TextChanged" />
                 </div>
-                <asp:Image ImageUrl="https://grupoact.com.ar/wp-content/uploads/2020/04/placeholder.png" 
+                <asp:Image ImageUrl="https://grupoact.com.ar/wp-content/uploads/2020/04/placeholder.png"
                     ID="imgArticulo" runat="server" Width="60%" />
             </div>
         </div>

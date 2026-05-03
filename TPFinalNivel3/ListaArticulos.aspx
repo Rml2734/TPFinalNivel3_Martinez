@@ -10,6 +10,7 @@
         <hr />
         <div class="row">
             <div class="col">
+
                 <asp:GridView ID="dgvArticulos" runat="server" DataKeyNames="Id" 
                     OnSelectedIndexChanged="dgvArticulos_SelectedIndexChanged"
                     AutoGenerateColumns="false" CssClass="table table-hover table-bordered shadow-sm">

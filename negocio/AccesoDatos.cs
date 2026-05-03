@@ -51,6 +51,21 @@ namespace negocio
             }
         }
 
+        // Este es el que te falta para que no de error en ArticuloNegocio
+        public void ejecutarAccion()
+        {
+            comando.Connection = conexion;
+            try
+            {
+                conexion.Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         // Este método es el que nos salva de la Inyección SQL que vimos en el examen
         public void setearParametro(string nombre, object valor)
         {
