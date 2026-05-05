@@ -13,9 +13,12 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Por defecto, ocultamos el botón eliminar cada vez que carga la página
+            btnEliminar.Visible = false;
+
             try
             {
-                // Solo cargamos los desplegables la primera vez que entra a la página
+                //1 Solo cargamos los desplegables la primera vez que entra a la página
                 if (!IsPostBack)
                 {
                     MarcaNegocio marcaNegocio = new MarcaNegocio();
@@ -32,6 +35,39 @@ namespace TPFinalNivel3
                     ddlCategoria.DataValueField = "Id";
                     ddlCategoria.DataTextField = "Descripcion";
                     ddlCategoria.DataBind();
+
+                    // 2. ¿Estamos editando? (Detectamos el ID de la URL)
+                    string id = Request.QueryString["id"] != null ? Request.QueryString["id"].ToString() : "";
+
+                    if (id != "")
+                    {
+                        // Si entramos aquí, es porque SÍ hay un ID, o sea, estamos EDITANDO
+                        btnEliminar.Visible = true; // ¡Aquí lo hacemos aparecer!
+
+                        // Buscamos el artículo por ID para cargar los campos
+                        ArticuloNegocio negocio = new ArticuloNegocio();
+                        // Necesitaremos un método para buscar solo UNO, ya te lo paso.
+                        Articulo seleccionado = (negocio.listar(id))[0];
+
+                        // Llenamos los TextBox
+                        txtCodigo.Text = seleccionado.Codigo;
+                        txtNombre.Text = seleccionado.Nombre;
+                        txtDescripcion.Text = seleccionado.Descripcion;
+                        ID_txtImagenUrl.Text = seleccionado.ImagenUrl;
+                        txtPrecio.Text = seleccionado.Precio.ToString();
+                        imgArticulo.ImageUrl = seleccionado.ImagenUrl;
+
+                        // Seleccionamos los desplegables
+                        ddlMarca.SelectedValue = seleccionado.Marca.Id.ToString();
+                        ddlCategoria.SelectedValue = seleccionado.Categoria.Id.ToString();
+
+                        // Dentro del if (id != "") después de cargar los datos:
+                        if (string.IsNullOrEmpty(seleccionado.ImagenUrl))
+                            imgArticulo.ImageUrl = "https://grupoact.com.ar/wp-content/uploads/2020/04/placeholder.png";
+
+                    }
+
+
                 }
             }
             catch (Exception ex)
@@ -66,8 +102,20 @@ namespace TPFinalNivel3
                 nuevo.Categoria = new Categoria();
                 nuevo.Categoria.Id = int.Parse(ddlCategoria.SelectedValue);
 
+                // Si hay un ID en la URL, se lo asignamos al objeto y MODIFICAMOS
+                if (Request.QueryString["id"] != null)
+                {
+                    nuevo.Id = int.Parse(Request.QueryString["id"]);
+                    negocio.modificar(nuevo);
+                }
+                else
+                {
+                    // Si no hay ID, es un artículo nuevo y AGREGAMOS
+                    negocio.agregar(nuevo);
+                }
+
                 // 4. Llamamos al método de negocio para que lo mande a la DB
-                negocio.agregar(nuevo);
+                //negocio.agregar(nuevo);
 
                 // 5. Si todo sale bien, volvemos a la lista
                 Response.Redirect("ListaArticulos.aspx", false);
@@ -83,6 +131,28 @@ namespace TPFinalNivel3
         {
             // Actualizamos el control Image con lo que el usuario escribió
             imgArticulo.ImageUrl = ID_txtImagenUrl.Text;
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ArticuloNegocio negocio = new ArticuloNegocio();
+                // Validamos que el ID venga en la URL antes de intentar borrar
+                if (Request.QueryString["id"] != null)
+                {
+                    int id = int.Parse(Request.QueryString["id"]);
+                    negocio.eliminar(id);
+                    Response.Redirect("ListaArticulos.aspx", false);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Si no tienes una página llamada Error.aspx creada, 
+                // mejor comenta la redirección para ver el error real en Visual Studio
+                Session.Add("error", ex.ToString());
+                // Response.Redirect("Error.aspx"); 
+            }
         }
     }
 }

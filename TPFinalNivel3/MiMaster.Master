@@ -13,7 +13,7 @@
     </asp:ContentPlaceHolder>
 
 </head>
-    <body>
+<body>
     <form id="form1" runat="server">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
@@ -22,12 +22,18 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                         <li class="nav-item">
                             <a class="nav-link active" href="Default.aspx">Home</a>
                         </li>
-                        <li class="nav-item">
+
+                        <li class="nav-item" id="liFavoritos" runat="server">
                             <a class="nav-link" href="Favoritos.aspx">Mis Favoritos</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="ListaArticulos.aspx">Lista Artículos</a>
                         </li>
                     </ul>
                     <div class="d-flex">
@@ -40,7 +46,7 @@
 
         <div class="container mt-4">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-                </asp:ContentPlaceHolder>
+            </asp:ContentPlaceHolder>
         </div>
 
         <footer class="text-center mt-5 py-3 border-top">

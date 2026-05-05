@@ -11,7 +11,14 @@
         <div class="row">
             <div class="col">
 
-                <asp:GridView ID="dgvArticulos" runat="server" DataKeyNames="Id" 
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <asp:Label Text="Filtrar por nombre:" runat="server" />
+                        <asp:TextBox runat="server" ID="txtFiltro" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged" />
+                    </div>
+                </div>
+
+                <asp:GridView ID="dgvArticulos" runat="server" DataKeyNames="Id"
                     OnSelectedIndexChanged="dgvArticulos_SelectedIndexChanged"
                     AutoGenerateColumns="false" CssClass="table table-hover table-bordered shadow-sm">
                     <Columns>

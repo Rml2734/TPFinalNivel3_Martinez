@@ -11,7 +11,15 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Por defecto ocultamos favoritos
+            liFavoritos.Visible = false;
 
+            // Si existe una sesión de usuario (esto lo definiremos al programar el login)
+            if (Session["usuario"] != null)
+            {
+                liFavoritos.Visible = true;
+                // Aquí también podrías ocultar los botones de Login/Registro
+            }
         }
     }
 }

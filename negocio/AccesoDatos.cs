@@ -66,6 +66,22 @@ namespace negocio
             }
         }
 
+        public int ejecutarAccionScalar()
+        {
+            comando.Connection = conexion;
+            try
+            {
+                conexion.Open();
+                // ExecuteScalar devuelve la primera columna de la primera fila 
+                // convertimos el resultado a int que es el ID que esperamos
+                return int.Parse(comando.ExecuteScalar().ToString());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         // Este método es el que nos salva de la Inyección SQL que vimos en el examen
         public void setearParametro(string nombre, object valor)
         {

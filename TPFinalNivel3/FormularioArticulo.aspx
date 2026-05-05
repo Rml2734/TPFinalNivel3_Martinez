@@ -33,9 +33,18 @@
                     <label for="txtPrecio" class="form-label">Precio</label>
                     <asp:TextBox runat="server" ID="txtPrecio" CssClass="form-control" />
                 </div>
+
+                <!-- Valida que no esté vacío -->
+                <asp:RequiredFieldValidator ErrorMessage="El precio es obligatorio" ControlToValidate="txtPrecio" runat="server" CssClass="text-danger" />
+
+                <!-- Valida que sea solo números (puedes usar decimales con coma o punto según tu PC) -->
+                <asp:RegularExpressionValidator ErrorMessage="Solo números, por favor" ControlToValidate="txtPrecio" ValidationExpression="^[0-9]+([.,][0-9]{1,2})?$" runat="server" CssClass="text-danger" />
+
                 <div class="mb-3">
                     <asp:Button Text="Aceptar" ID="btnAceptar" CssClass="btn btn-primary" OnClick="btnAceptar_Click" runat="server" />
                     <a href="ListaArticulos.aspx" class="btn btn-secondary">Cancelar</a>
+                    <asp:Button Text="Eliminar" ID="btnEliminar" OnClick="btnEliminar_Click" CssClass="btn btn-danger" runat="server"
+                        OnClientClick="return confirm('¿Estás seguro de que deseas eliminar este artículo?');" />
                 </div>
             </div>
 
