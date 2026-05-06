@@ -53,13 +53,17 @@ namespace TPFinalNivel3
                 user.Apellido = txtApellido.Text;
                 user.UrlImagenPerfil = txtUrlImagen.Text;
 
-                // Mandamos a actualizar la base de datos (ocupamos crear este método)
+                // 1. Actualizamos Base de Datos
                 negocio.actualizar(user);
+
+                // 2. IMPORTANTE: Actualizamos la Session para que el resto de la app sepa el cambio
+                // Al hacer esto, la Master Page y el Page_Load verán los datos nuevos
+                Session["usuario"] = user;
 
                 // IMPORTANTE: Al actualizar la base, también debemos actualizar la 'foto redonda' de la Master Page.
                 // Para eso, necesitamos forzar una recarga o usar controles de imagen que se actualicen en tiempo real. 
                 // Lo más sencillo por ahora es redireccionar a la misma página para que la Master se vuelva a cargar con los datos nuevos.
-                Response.Redirect("MiPerfil.aspx", false);
+                Response.Redirect("Default.aspx", false);
 
             }
             catch (Exception ex)

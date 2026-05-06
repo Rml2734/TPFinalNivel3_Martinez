@@ -29,7 +29,7 @@
 
             <div class="mb-3">
                 <label class="form-label">URL Imagen de Perfil</label>
-                <asp:TextBox runat="server" ID="txtUrlImagen" CssClass="form-control" />
+                <asp:TextBox runat="server" ID="txtUrlImagen" CssClass="form-control" onchange="actualizarFoto()" />
             </div>
 
             <asp:Button Text="Guardar Cambios" runat="server" ID="btnGuardar" OnClick="btnGuardar_Click" CssClass="btn btn-primary" />
@@ -45,6 +45,15 @@
             <p class="text-muted mt-2">Previsualización de tu foto</p>
         </div>
     </div>
+
+    <script>
+        function actualizarFoto() {
+            // Obtenemos el valor del cuadro de texto
+            const url = document.getElementById('<%= txtUrlImagen.ClientID %>').value;
+        // Se lo pasamos a la imagen de previsualización
+        document.getElementById('<%= imgNuevoPerfil.ClientID %>').src = url;
+        }
+    </script>
 
 
 

@@ -52,8 +52,8 @@
                             <asp:Label ID="lblUser" runat="server" CssClass="me-2" />
                             <!-- Foto de Perfil Redonda -->
                             <asp:Image ID="imgAvatar" runat="server"
-                                CssClass="rounded-circle border border-light"
-                                Style="height: 40px; width: 40px; object-fit: cover;"
+                                CssClass="rounded-circle border border-light shadow-sm"
+                                style="height:40px; width:40px; object-fit: cover; background-color: #ccc; display: block;"
                                 ImageUrl="https://www.pngkit.com/png/full/301-3012694_account-user-profile-avatar-comments-fa-user-circle.png" />
                         </a>
                         <asp:Button Text="Salir" ID="btnSalir" OnClick="btnSalir_Click" CssClass="btn btn-outline-danger btn-sm" runat="server" />

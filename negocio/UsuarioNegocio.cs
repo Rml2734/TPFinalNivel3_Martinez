@@ -25,8 +25,16 @@ namespace negocio
                 {
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.Admin = (bool)datos.Lector["admin"];
+
+                    // Nombre
                     if (!(datos.Lector["nombre"] is DBNull))
                         usuario.Nombre = (string)datos.Lector["nombre"];
+
+                    // Apellido ¡ESTA ES LA LÍNEA QUE FALTA!
+                    if (!(datos.Lector["apellido"] is DBNull))
+                        usuario.Apellido = (string)datos.Lector["apellido"];
+
+                    // Imagen
                     if (!(datos.Lector["urlImagenPerfil"] is DBNull))
                         usuario.UrlImagenPerfil = (string)datos.Lector["urlImagenPerfil"];
 
