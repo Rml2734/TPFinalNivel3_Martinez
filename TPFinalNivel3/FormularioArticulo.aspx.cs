@@ -13,6 +13,15 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            // Si no es admin, lo sacamos de aquí
+            if (!(Seguridad.sesionActiva(Session["usuario"]) && ((dominio.Usuario)Session["usuario"]).Admin))
+            {
+                Session.Add("error", "No tienes permisos de administrador para acceder a esta pantalla.");
+                Response.Redirect("Error.aspx", false);
+            }
+
+
             // Por defecto, ocultamos el botón eliminar cada vez que carga la página
             btnEliminar.Visible = false;
 

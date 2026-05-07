@@ -18,7 +18,16 @@ namespace negocio
 
             try
             {
-                string consulta = "Select A.Id, Codigo, Nombre, A.Descripcion, ImagenUrl, Precio, M.Descripcion Marca, C.Descripcion Categoria, A.IdMarca, A.IdCategoria From ARTICULOS A, MARCAS M, CATEGORIAS C Where A.IdMarca = M.Id And A.IdCategoria = C.Id ";
+                //string consulta = "Select A.Id, Codigo, Nombre, A.Descripcion, ImagenUrl, Precio, M.Descripcion Marca, C.Descripcion Categoria, A.IdMarca, A.IdCategoria From ARTICULOS A, MARCAS M, CATEGORIAS C Where A.IdMarca = M.Id And A.IdCategoria = C.Id ";
+                string consulta = "Select A.Id, Codigo, Nombre, A.Descripcion, ImagenUrl, Precio, " +
+                  "ISNULL(M.Descripcion, 'Sin Marca') Marca, " +
+                  "ISNULL(C.Descripcion, 'Sin Categoría') Categoria, " +
+                  "A.IdMarca, A.IdCategoria " +
+                  "From ARTICULOS A " +
+                  "LEFT JOIN MARCAS M ON A.IdMarca = M.Id " +
+                  "LEFT JOIN CATEGORIAS C ON A.IdCategoria = C.Id " +
+                  "Where 1=1 ";
+
 
                 // Si mandamos un ID por parámetro, filtramos la consulta SQL
                 if (id != "")
@@ -43,11 +52,13 @@ namespace negocio
                     aux.Precio = (decimal)datos.Lector["Precio"];
 
                     aux.Marca = new Marca();
-                    aux.Marca.Id = (int)datos.Lector["IdMarca"];
+                    if (!(datos.Lector["IdMarca"] is DBNull))
+                        aux.Marca.Id = (int)datos.Lector["IdMarca"];
                     aux.Marca.Descripcion = (string)datos.Lector["Marca"];
 
                     aux.Categoria = new Categoria();
-                    aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
+                    if (!(datos.Lector["IdCategoria"] is DBNull))
+                        aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
                     aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
 
                     lista.Add(aux);
@@ -134,6 +145,60 @@ namespace negocio
             {
                 throw ex;
             }
+        }
+
+        public void insertarFavorito(int idUser, int idArticulo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Insert into FAVORITOS (IdUser, IdArticulo) values (@idUser, @idArticulo)");
+                datos.setearParametro("@idUser", idUser);
+                datos.setearParametro("@idArticulo", idArticulo);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex) { throw ex; }
+            finally { datos.cerrarConexion(); }
+        }
+
+
+        public List<Articulo> listarFavoritos(int idUser)
+        {
+            List<Articulo> lista = new List<Articulo>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Hacemos un JOIN para traer los datos del artículo que están en la tabla FAVORITOS
+                datos.setearConsulta("Select A.Id, A.Nombre, A.ImagenUrl from ARTICULOS A Inner Join FAVORITOS F ON A.Id = F.IdArticulo Where F.IdUser = @idUser");
+                datos.setearParametro("@idUser", idUser);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Articulo aux = new Articulo();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.Nombre = (string)datos.Lector["Nombre"];
+                    aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex) { throw ex; }
+            finally { datos.cerrarConexion(); }
+        }
+
+        public void eliminarFavorito(int idUser, int idArticulo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Delete from FAVORITOS where IdUser = @idUser and IdArticulo = @idArt");
+                datos.setearParametro("@idUser", idUser);
+                datos.setearParametro("@idArt", idArticulo);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex) { throw ex; }
+            finally { datos.cerrarConexion(); }
         }
 
 

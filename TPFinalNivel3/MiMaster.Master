@@ -32,7 +32,7 @@
                             <a class="nav-link" href="Favoritos.aspx">Mis Favoritos</a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" id="liListaArticulos" runat="server">
                             <a class="nav-link" href="ListaArticulos.aspx">Lista Artículos</a>
                         </li>
                     </ul>
@@ -44,8 +44,8 @@
                         <a href="Login.aspx" class="btn btn-outline-success me-2">Login</a>
                         <a href="Registro.aspx" class="btn btn-primary">Registrarse</a>
                         <% }
-                        else
-                        { %>
+                            else
+                            { %>
                         <!-- Sección de Perfil y Salir -->
                         <a href="MiPerfil.aspx" class="d-flex align-items-center text-decoration-none text-light me-3">
                             <!-- Texto del correo (Label) -->
@@ -53,8 +53,7 @@
                             <!-- Foto de Perfil Redonda -->
                             <asp:Image ID="imgAvatar" runat="server"
                                 CssClass="rounded-circle border border-light shadow-sm"
-                                style="height:40px; width:40px; object-fit: cover; background-color: #ccc; display: block;"
-                                ImageUrl="https://www.pngkit.com/png/full/301-3012694_account-user-profile-avatar-comments-fa-user-circle.png" />
+                                Style="height: 40px; width: 40px; object-fit: cover; display: block;" />
                         </a>
                         <asp:Button Text="Salir" ID="btnSalir" OnClick="btnSalir_Click" CssClass="btn btn-outline-danger btn-sm" runat="server" />
                         <% } %>

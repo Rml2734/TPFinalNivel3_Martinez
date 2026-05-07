@@ -13,27 +13,31 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Por defecto ocultamos favoritos
+            // 1. Por defecto, estas opciones están ocultas para todos
             liFavoritos.Visible = false;
+            liListaArticulos.Visible = false;
 
-            // Si existe una sesión de usuario (esto lo definiremos al programar el login)
-            if (Session["usuario"] != null)
-            {
-                liFavoritos.Visible = true;
-                // Aquí también podrías ocultar los botones de Login/Registro
-            }
-
-            // Solo si hay sesión activa, cargamos los datos
+            // 2. Si hay una sesión activa, revisamos qué permisos tiene
             if (Seguridad.sesionActiva(Session["usuario"]))
             {
                 Usuario user = (Usuario)Session["usuario"];
-                lblUser.Text = user.Email;
 
-                // Validamos la imagen de perfil
+                // El usuario logueado (sea quien sea) puede ver sus favoritos
+                liFavoritos.Visible = true;
+
+                // 3. SOLO si el usuario es Admin, le mostramos la gestión de artículos
+                if (user.Admin)
+                {
+                    liListaArticulos.Visible = true;
+                }
+
+                // Cargamos los datos de perfil (Email y Foto) que ya teníamos...
+                lblUser.Text = user.Email;
                 if (!string.IsNullOrEmpty(user.UrlImagenPerfil))
                 {
                     // Si tiene foto, la cargamos
-                    imgAvatar.ImageUrl = "~/Images/" + user.UrlImagenPerfil; // Asumiendo que las guardas en una carpeta /Images/
+                    //imgAvatar.ImageUrl = "~/Images/" + user.UrlImagenPerfil; // Asumiendo que las guardas en una carpeta /Images/
+                    imgAvatar.ImageUrl = user.UrlImagenPerfil;
                 }
                 else
                 {
@@ -42,6 +46,13 @@ namespace TPFinalNivel3
                 }
 
             }
+
+            // Si existe una sesión de usuario (esto lo definiremos al programar el login)
+            //if (Session["usuario"] != null)
+            //{
+              //  liFavoritos.Visible = true;
+                // Aquí también podrías ocultar los botones de Login/Registro
+            //}
         }
 
         protected void btnSalir_Click(object sender, EventArgs e)
