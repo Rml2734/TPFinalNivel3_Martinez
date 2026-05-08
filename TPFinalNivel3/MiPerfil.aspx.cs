@@ -37,6 +37,12 @@ namespace TPFinalNivel3
                     // Asumimos que es una URL completa o una ruta relativa que funciona
                     imgNuevoPerfil.ImageUrl = user.UrlImagenPerfil;
                 }
+
+                // El Admin no ve el botón eliminar...
+                //if (Seguridad.esAdmin(user))
+                //{
+                  //  btnEliminar.Visible = false; // El Admin no ve el botón, problema resuelto.
+                //}
             }
 
         }
@@ -45,26 +51,27 @@ namespace TPFinalNivel3
         {
             try
             {
+                // 1. PRIMERO validamos: Si falta algo, el código se detiene aquí y no toca la DB
+                if (!Page.IsValid)
+                    return;
+
                 UsuarioNegocio negocio = new UsuarioNegocio();
                 Usuario user = (Usuario)Session["usuario"];
 
-                // Actualizamos los datos del objeto en sesión con lo que escribió el usuario
+                // 2. Actualizamos el objeto con los datos de los TextBox
                 user.Nombre = txtNombre.Text;
                 user.Apellido = txtApellido.Text;
                 user.UrlImagenPerfil = txtUrlImagen.Text;
 
-                // 1. Actualizamos Base de Datos
+                // 3. Guardamos en la Base de Datos
                 negocio.actualizar(user);
 
-                // 2. IMPORTANTE: Actualizamos la Session para que el resto de la app sepa el cambio
-                // Al hacer esto, la Master Page y el Page_Load verán los datos nuevos
+                // 4. Actualizamos la Sesión para que la Master Page refleje los cambios
                 Session["usuario"] = user;
 
-                // IMPORTANTE: Al actualizar la base, también debemos actualizar la 'foto redonda' de la Master Page.
-                // Para eso, necesitamos forzar una recarga o usar controles de imagen que se actualicen en tiempo real. 
-                // Lo más sencillo por ahora es redireccionar a la misma página para que la Master se vuelva a cargar con los datos nuevos.
+                // 5. Redireccionamos al Home
+                // Usamos 'false' en el Redirect para evitar una excepción interna de .NET
                 Response.Redirect("Default.aspx", false);
-
             }
             catch (Exception ex)
             {
@@ -73,6 +80,38 @@ namespace TPFinalNivel3
             }
         }
 
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Usuario user = (Usuario)Session["usuario"];
 
+                // REGLA DE ORO: Un admin no puede auto-eliminarse
+                if (Seguridad.esAdmin(user))
+                {
+                    // Podés mandarlo a una página de error o mostrar un mensaje
+                    Session.Add("error", "Por razones de seguridad, las cuentas de administrador no pueden ser eliminadas desde el perfil.");
+                    Response.Redirect("Error.aspx", false);
+                    return;
+                }
+
+
+                UsuarioNegocio negocio = new UsuarioNegocio();              
+                negocio.eliminar(user.Id);
+
+                // Limpiamos la sesión porque el usuario ya no existe
+                Session.Abandon();
+                Response.Redirect("Default.aspx", false);
+            }
+            catch (Exception ex)
+            {
+                // Solo redirigimos si NO es el error de hilo anulado (ThreadAbortException)
+                if (!(ex is System.Threading.ThreadAbortException))
+                {
+                    Session.Add("error", "Ocurrió un error inesperado al intentar eliminar la cuenta.");
+                    Response.Redirect("Error.aspx");
+                }
+            }
+        }
     }
 }

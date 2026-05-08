@@ -67,27 +67,38 @@ namespace TPFinalNivel3
             }
         }
 
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            // 1. Intentamos traer la lista de la sesión
+            List<Articulo> lista = (List<Articulo>)Session["listaArticulos"];
+
+            // 2. Si es null, la cargamos de nuevo (por si expiró la sesión)
+            if (lista == null)
+            {
+                ArticuloNegocio negocio = new ArticuloNegocio();
+                lista = negocio.listar();
+                Session["listaArticulos"] = lista;
+            }
+
+            // 3. Ahora sí filtramos sin miedo al error
+            List<Articulo> listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()));
+            repRepetidor.DataSource = listaFiltrada;
+            repRepetidor.DataBind();
+
+            // --- LA MAGIA ESTÁ AQUÍ ---
+            // Si la lista filtrada no tiene elementos, mostramos el mensaje
+            if (listaFiltrada.Count == 0)
+            {
+                lblSinResultados.Visible = true;
+            }
+            else
+            {
+                lblSinResultados.Visible = false;
+            }
+        }
 
 
-        //protected void btnFavorito_Click(object sender, EventArgs e)
-        //{
-        // 1. Validar que esté logueado
-        //  if (!Seguridad.sesionActiva(Session["usuario"]))
-        //{
-        //  Response.Redirect("Login.aspx", false);
-        //return;
-        //}
 
-        // 2. Capturar IDs
-        //int idArticulo = int.Parse(((LinkButton)sender).CommandArgument);
-        //int idUser = ((Usuario)Session["usuario"]).Id;
-
-        // 3. Guardar en DB
-        //ArticuloNegocio negocio = new ArticuloNegocio();
-        //negocio.insertarFavorito(idUser, idArticulo);
-
-        // 4. Opcional: Avisar al usuario o recargar
-        //}
 
     }
 }

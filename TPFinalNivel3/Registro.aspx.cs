@@ -20,6 +20,10 @@ namespace TPFinalNivel3
         {
             try
             {
+                // Si el email no es válido, el código se detiene aquí
+                if (!Page.IsValid)
+                    return;
+
                 Usuario user = new Usuario();
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
 

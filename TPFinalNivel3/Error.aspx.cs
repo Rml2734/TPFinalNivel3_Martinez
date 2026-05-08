@@ -11,7 +11,11 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["error"] != null)
+            {
+                // Esto asumiendo que tienes un Label con ID="lblMensaje" en Error.aspx
+                lblMensaje.Text = Session["error"].ToString();
+            }
         }
     }
 }

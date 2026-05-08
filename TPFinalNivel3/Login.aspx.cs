@@ -2,6 +2,7 @@
 using negocio;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -33,11 +34,15 @@ namespace TPFinalNivel3
                 else
                 {
                     // Podrías poner un label que diga "Datos incorrectos"
+                    // SI EL LOGIN FALLA:
+                    lblError.Text = "Usuario o contraseña incorrectos. Reintenta.";
+                    lblError.Visible = true;
                 }
             }
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx");
             }
         }
     }

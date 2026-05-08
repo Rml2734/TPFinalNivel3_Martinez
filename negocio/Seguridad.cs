@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using dominio;
 
 namespace negocio
 {
@@ -16,6 +17,14 @@ namespace negocio
                 return true;
             else
                 return false;
+        }
+
+
+        public static bool esAdmin(object user)
+        {
+            Usuario usuario = user != null ? (Usuario)user : null;
+            // Retorna true solo si el usuario existe y su propiedad Admin es true (1 en la DB)
+            return usuario != null && usuario.Admin;
         }
 
     }

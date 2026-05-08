@@ -11,15 +11,18 @@
                 <hr />
                 <div class="mb-3">
                     <label for="txtCodigo" class="form-label">Código</label>
-                    <asp:TextBox runat="server" ID="txtCodigo" CssClass="form-control" />
+                    <asp:TextBox runat="server" ID="txtCodigo" CssClass="form-control" MaxLength="50" />
                 </div>
                 <div class="mb-3">
                     <label for="txtNombre" class="form-label">Nombre</label>
-                    <asp:TextBox runat="server" ID="txtNombre" CssClass="form-control" />
+                    <asp:TextBox runat="server" ID="txtNombre" CssClass="form-control" MaxLength="50" />
+                    <%-- Valida que el nombre no esté vacío --%>
+                    <asp:RequiredFieldValidator ErrorMessage="El nombre es obligatorio"
+                        ControlToValidate="txtNombre" runat="server" CssClass="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="txtDescripcion" class="form-label">Descripción</label>
-                    <asp:TextBox runat="server" ID="txtDescripcion" CssClass="form-control" TextMode="MultiLine" />
+                    <asp:TextBox runat="server" ID="txtDescripcion" CssClass="form-control" TextMode="MultiLine" MaxLength="50" />
                 </div>
                 <div class="mb-3">
                     <label for="ddlMarca" class="form-label">Marca</label>
@@ -41,7 +44,9 @@
                 <asp:RegularExpressionValidator ErrorMessage="Solo números, por favor" ControlToValidate="txtPrecio" ValidationExpression="^[0-9]+([.,][0-9]{1,2})?$" runat="server" CssClass="text-danger" />
 
                 <div class="mb-3">
-                    <asp:Button Text="Aceptar" ID="btnAceptar" CssClass="btn btn-primary" OnClick="btnAceptar_Click" runat="server" />
+                    <asp:Button Text="Aceptar" ID="btnAceptar" CssClass="btn btn-primary"
+                        OnClick="btnAceptar_Click" runat="server" OnClientClick="this.disabled=true;this.value='Enviando...';"
+                        UseSubmitBehavior="false" />
                     <a href="ListaArticulos.aspx" class="btn btn-secondary">Cancelar</a>
                     <asp:Button Text="Eliminar" ID="btnEliminar" OnClick="btnEliminar_Click" CssClass="btn btn-danger" runat="server"
                         OnClientClick="return confirm('¿Estás seguro de que deseas eliminar este artículo?');" />

@@ -16,6 +16,10 @@
                 <label class="form-label">Contraseña</label>
                 <asp:TextBox runat="server" ID="txtPassword" TextMode="Password" CssClass="form-control" />
             </div>
+            <div class="mb-3">
+                <%-- Este Label estará oculto por defecto --%>
+                <asp:Label ID="lblError" runat="server" CssClass="text-danger small fw-bold" Visible="false" />
+            </div>
             <asp:Button Text="Ingresar" ID="btnLogin" OnClick="btnLogin_Click" CssClass="btn btn-primary w-100" runat="server" />
         </div>
     </div>

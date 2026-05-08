@@ -9,6 +9,77 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <%-- ESTILOS PERSONALIZADOS PARA SORPRENDER AL PROFE --%>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        /* Efecto de elevación en las tarjetas */
+        .card-custom:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
+        }
+        /* Ajuste para que los botones redondos se vean mejor */
+        .rounded-pill {
+            border-radius: 50px !important;
+        }
+        /* Transición suave para todos los cambios de estado */
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+
+        /* Estilos base del modo oscuro */
+        [data-bs-theme="dark"] body {
+            background-color: #121212 !important;
+            color: #f8f9fa !important;
+        }
+
+        [data-bs-theme="dark"] .card {
+            background-color: #1e1e1e !important;
+            border: 1px solid #333 !important;
+        }
+
+        /* Esto quita el fondo blanco de la sección de la imagen */
+        [data-bs-theme="dark"] .bg-light,
+        [data-bs-theme="dark"] .card-img-top,
+        [data-bs-theme="dark"] .position-relative {
+            background-color: #2a2a2a !important;
+        }
+
+        /* Forzar que los textos sean legibles */
+        [data-bs-theme="dark"] .card-body h5,
+        [data-bs-theme="dark"] .card-title {
+            color: #0d6efd !important; /* Mantenemos el azul del título pero brillante */
+        }
+
+        [data-bs-theme="dark"] .text-muted,
+        [data-bs-theme="dark"] .card-text.small,
+        [data-bs-theme="dark"] small {
+            color: #bbb !important; /* Un gris claro para las descripciones y el 'Fav' */
+        }
+
+        [data-bs-theme="dark"] .card-footer {
+            background-color: #1e1e1e !important;
+        }
+
+        /* Estilo para el contenedor de error en modo claro */
+    .card-error {
+        background-color: #ffffff;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* Estilo para el contenedor de error en modo oscuro */
+    [data-bs-theme="dark"] .card-error {
+        background-color: #1e1e1e !important;
+        border: 1px solid #333 !important;
+        color: #f8f9fa;
+    }
+
+    [data-bs-theme="dark"] .lead {
+        color: #bbb;
+    }
+    </style>
+
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 
@@ -38,6 +109,11 @@
                     </ul>
 
                     <div class="d-flex align-items-center me-3 shadow-sm">
+
+                        <button class="btn btn-outline-light btn-sm me-2" id="btn-theme" type="button">
+                            🌙 / ☀️
+                        </button>
+
                         <% if (!negocio.Seguridad.sesionActiva(Session["usuario"]))
                             { %>
                         <!-- ... (tus botones de Login y Registro se quedan igual) ... -->
@@ -73,5 +149,25 @@
         </footer>
     </form>
 </body>
+<script>
+    const btnTheme = document.getElementById('btn-theme');
+    const htmlElement = document.documentElement;
+
+    btnTheme.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        htmlElement.setAttribute('data-bs-theme', newTheme);
+
+        // Opcional: Guardar la preferencia para que no se pierda al recargar
+        localStorage.setItem('theme', newTheme);
+    });
+
+    // Cargar el tema guardado al iniciar
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+    }
+</script>
 
 </html>
