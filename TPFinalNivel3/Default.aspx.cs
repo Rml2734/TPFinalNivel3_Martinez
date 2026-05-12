@@ -53,7 +53,13 @@ namespace TPFinalNivel3
 
                 // 4. Guardamos en la base de datos
                 negocio.ArticuloNegocio negocioArt = new negocio.ArticuloNegocio();
-                negocioArt.insertarFavorito(idUser, idArticulo);
+
+                // --- VALIDACIÓN DE DUPLICADOS ---
+                if (!negocioArt.yaEsFavorito(idUser, idArticulo))
+                {
+                    // Solo si NO existe, lo insertamos
+                    negocioArt.insertarFavorito(idUser, idArticulo);
+                }
 
                 // TIP: Para saber que funcionó, mandémoslo a la página de favoritos
                 Response.Redirect("Favoritos.aspx", false);

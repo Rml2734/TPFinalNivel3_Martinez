@@ -30,6 +30,7 @@ namespace TPFinalNivel3
                 //1 Solo cargamos los desplegables la primera vez que entra a la página
                 if (!IsPostBack)
                 {
+                    // CARGA DE DESPLEGABLES (Marcas y Categorías)
                     MarcaNegocio marcaNegocio = new MarcaNegocio();
                     CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
 
@@ -45,49 +46,62 @@ namespace TPFinalNivel3
                     ddlCategoria.DataTextField = "Descripcion";
                     ddlCategoria.DataBind();
 
-                    // 2. ¿Estamos editando? (Detectamos el ID de la URL)
+                    // 2. ¿ESTAMOS EDITANDO? (Detección de ID)
                     string id = Request.QueryString["id"] != null ? Request.QueryString["id"].ToString() : "";
 
                     if (id != "")
                     {
-                        // Si entramos aquí, es porque SÍ hay un ID, o sea, estamos EDITANDO
-                        btnEliminar.Visible = true; // ¡Aquí lo hacemos aparecer!
-
-                        // Buscamos el artículo por ID para cargar los campos
                         ArticuloNegocio negocio = new ArticuloNegocio();
-                        // Necesitaremos un método para buscar solo UNO, ya te lo paso.
-                        Articulo seleccionado = (negocio.listar(id))[0];
+                        // Traemos la lista filtrada por ID
+                        List<Articulo> lista = negocio.listar(id);
 
-                        // Llenamos los TextBox
-                        txtCodigo.Text = seleccionado.Codigo;
-                        txtNombre.Text = seleccionado.Nombre;
-                        txtDescripcion.Text = seleccionado.Descripcion;
-                        ID_txtImagenUrl.Text = seleccionado.ImagenUrl;
-                        txtPrecio.Text = seleccionado.Precio.ToString();
-                        imgArticulo.ImageUrl = seleccionado.ImagenUrl;
+                        // VERIFICACIÓN DEL ID FANTASMA
+                        if (lista.Count > 0)
+                        {
+                            btnEliminar.Visible = true;
+                            Articulo seleccionado = lista[0];
 
-                        // Seleccionamos los desplegables
-                        ddlMarca.SelectedValue = seleccionado.Marca.Id.ToString();
-                        ddlCategoria.SelectedValue = seleccionado.Categoria.Id.ToString();
+                            // CARGA DE CAMPOS
+                            txtCodigo.Text = seleccionado.Codigo;
+                            txtNombre.Text = seleccionado.Nombre;
+                            txtDescripcion.Text = seleccionado.Descripcion;
+                            ID_txtImagenUrl.Text = seleccionado.ImagenUrl;
 
-                        // Dentro del if (id != "") después de cargar los datos:
-                        if (string.IsNullOrEmpty(seleccionado.ImagenUrl))
-                            imgArticulo.ImageUrl = "https://grupoact.com.ar/wp-content/uploads/2020/04/placeholder.png";
+                            // Formato de precio para que el validador no salte
+                            txtPrecio.Text = seleccionado.Precio.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
 
+                            imgArticulo.ImageUrl = seleccionado.ImagenUrl;
+
+                            // Selección de desplegables
+                            ddlMarca.SelectedValue = seleccionado.Marca.Id.ToString();
+                            ddlCategoria.SelectedValue = seleccionado.Categoria.Id.ToString();
+
+                            // Imagen por defecto si está vacío
+                            if (string.IsNullOrEmpty(seleccionado.ImagenUrl))
+                                imgArticulo.ImageUrl = "https://grupoact.com.ar/wp-content/uploads/2020/04/placeholder.png";
+                        }
+                        else
+                        {
+                            // SI EL ID NO EXISTE (Ej: 999999)
+                            Session.Add("error", "El artículo con ID " + id + " no existe en el sistema.");
+                            Response.Redirect("Error.aspx", false);
+                        }
                     }
-
-
                 }
             }
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                // Aquí podrías redireccionar a una página de error
+                Response.Redirect("Error.aspx");
             }
         }
 
         protected void btnAceptar_Click(object sender, EventArgs e)
         {
+            // PRIMERO: Validamos que los campos cumplan las reglas (Nombre, Precio, etc.)
+            if (!Page.IsValid)
+                return;
+
             try
             {
                 // 1. Creamos el objeto (el molde vacío)
@@ -100,8 +114,12 @@ namespace TPFinalNivel3
                 nuevo.Descripcion = txtDescripcion.Text;
                 nuevo.ImagenUrl = ID_txtImagenUrl.Text;
 
-                // El precio es decimal, así que lo convertimos
-                nuevo.Precio = decimal.Parse(txtPrecio.Text);
+                // --- BLOQUE COMBINADO PARA EL PRECIO ---
+                // A. Reemplazamos la coma por punto para normalizar el texto
+                string precioTexto = txtPrecio.Text.Replace(",", ".");
+                // B. Usamos InvariantCulture para que siempre entienda el punto como decimal
+                nuevo.Precio = decimal.Parse(precioTexto, System.Globalization.CultureInfo.InvariantCulture);
+                // ----------------------------------------
 
                 // 3. Capturamos lo seleccionado en los desplegables
                 // Creamos una marca y categoría nuevas solo para guardar el ID seleccionado
@@ -131,6 +149,7 @@ namespace TPFinalNivel3
             }
             catch (Exception ex)
             {
+                // Si algo falla, el parpadeo rojo nos avisará qué pasó
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Error.aspx");
             }

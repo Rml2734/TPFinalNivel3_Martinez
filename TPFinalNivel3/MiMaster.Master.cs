@@ -58,7 +58,8 @@ namespace TPFinalNivel3
         protected void btnSalir_Click(object sender, EventArgs e)
         {
             // Limpiamos la sesión y mandamos al Login
-            Session.Clear();
+            Session.Abandon(); // Mata la sesión
+            Session.Clear();   // Limpia todas las variables
             Response.Redirect("Login.aspx");
         }
     }

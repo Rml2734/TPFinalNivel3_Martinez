@@ -201,6 +201,30 @@ namespace negocio
             finally { datos.cerrarConexion(); }
         }
 
+        public bool yaEsFavorito(int idUser, int idArticulo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Consultamos si existe el registro
+                datos.setearConsulta("Select Id from FAVORITOS Where IdUser = @idUser AND IdArticulo = @idArticulo");
+                datos.setearParametro("@idUser", idUser);
+                datos.setearParametro("@idArticulo", idArticulo);
+                datos.ejecutarLectura();
+
+                // Si el lector tiene filas, es porque ya existe
+                return datos.Lector.Read();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
 
     }
 }
