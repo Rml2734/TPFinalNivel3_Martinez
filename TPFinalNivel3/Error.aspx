@@ -33,7 +33,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container text-center mt-5">
-        <%-- Cambiamos 'bg-white' por una clase que respete el tema y ajustamos el padding --%>
+        <%--  --%>
         <div class="shadow p-5 mb-5 rounded card-error" style="transition: all 0.3s ease;">
             <h1 class="display-4 text-danger fw-bold">¡Ups! Algo salió mal</h1>
             <p class="lead mt-3">Hubo un problema procesando tu solicitud.</p>

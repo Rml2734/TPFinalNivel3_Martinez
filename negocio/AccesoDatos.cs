@@ -23,7 +23,7 @@ namespace negocio
             // CONEXIÓN LOCAL (La que usas ahorita para desarrollar)
             conexion = new SqlConnection("server=.\\SQLEXPRESS; database=CATALOGO_WEB_DB; integrated security=true");
 
-            // CONEXIÓN RAILWAY (La desbloquearemos el domingo)
+            // CONEXIÓN RAILWAY (La desbloquearemos )
             // El string de conexión te lo dará Railway algo así: 
             // "Server=sqlserver.proxy.rlwy.net,12345;Database=CATALOGO_WEB_DB;User Id=sa;Password=tu_password_de_railway;"
             // conexion = new SqlConnection("ACÁ_IRÁ_EL_STRING_DE_RAILWAY");
@@ -51,7 +51,7 @@ namespace negocio
             }
         }
 
-        // Este es el que te falta para que no de error en ArticuloNegocio
+        //  Para que no de error en ArticuloNegocio
         public void ejecutarAccion()
         {
             comando.Connection = conexion;

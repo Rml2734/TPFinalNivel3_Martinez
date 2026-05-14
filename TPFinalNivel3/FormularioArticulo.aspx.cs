@@ -176,8 +176,7 @@ namespace TPFinalNivel3
             }
             catch (Exception ex)
             {
-                // Si no tienes una página llamada Error.aspx creada, 
-                // mejor comenta la redirección para ver el error real en Visual Studio
+                // Página llamada Error.aspx, 
                 Session.Add("error", ex.ToString());
                 // Response.Redirect("Error.aspx"); 
             }

@@ -30,7 +30,7 @@ namespace negocio
                     if (!(datos.Lector["nombre"] is DBNull))
                         usuario.Nombre = (string)datos.Lector["nombre"];
 
-                    // Apellido ¡ESTA ES LA LÍNEA QUE FALTA!
+                    // Apellido 
                     if (!(datos.Lector["apellido"] is DBNull))
                         usuario.Apellido = (string)datos.Lector["apellido"];
 
@@ -52,7 +52,7 @@ namespace negocio
             }
         }
 
-        // MÉTODO 2: Para el Registro (Este es el que te faltaba separar)
+        // MÉTODO 2: Para el Registro 
         public int insertarNuevo(Usuario nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -63,8 +63,7 @@ namespace negocio
                 datos.setearParametro("@email", nuevo.Email);
                 datos.setearParametro("@pass", nuevo.Pass);
 
-                // IMPORTANTE: Si tu clase AccesoDatos no tiene 'ejecutarAccionScalar', usa 'ejecutarLectura' y lee el ID
-                // Pero si el profe les dio el método escalar, úsalo así:
+                
                 return datos.ejecutarAccionScalar();
             }
             catch (Exception ex)
