@@ -9,6 +9,8 @@ namespace negocio
 {
     public class MarcaNegocio
     {
+        // Recupera el listado de marcas desde la base de datos
+        // Utilizado para la carga de componentes de selección en la interfaz de usuario
         public List<Marca> listar()
         {
             List<Marca> lista = new List<Marca>();
@@ -32,6 +34,7 @@ namespace negocio
             }
             catch (Exception ex)
             {
+                // Propagación de excepciones para manejo centralizado en la capa web
                 throw ex;
             }
             finally

@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace dominio
 {
+    // Entidad que representa la marca del fabricante del artículo
     public class Marca
     {
         public int Id { get; set; }
         public string Descripcion { get; set; }
-        // Tip: Sobreescribir el ToString ayuda mucho para los DropDownList
-        public override string ToString() { return Descripcion; }
+
+
+        // Sobreescritura del método ToString para optimizar el enlace de datos (Data Binding)
+        // en controles de selección de la interfaz de usuario (UI)
+        public override string ToString() 
+        { 
+            return Descripcion;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace negocio
 {
     public class UsuarioNegocio
     {
-        // MÉTODO 1: Para el Login
+        // Valida las credenciales del usuario y mapea sus datos de perfil si son correctos
         public bool Loguear(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -23,10 +23,11 @@ namespace negocio
 
                 if (datos.Lector.Read())
                 {
+                    // Asignación de propiedades básicas
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.Admin = (bool)datos.Lector["admin"];
 
-                    // Nombre
+                    // Validaciones contra DBNull para evitar excepciones de casteo
                     if (!(datos.Lector["nombre"] is DBNull))
                         usuario.Nombre = (string)datos.Lector["nombre"];
 
@@ -52,13 +53,13 @@ namespace negocio
             }
         }
 
-        // MÉTODO 2: Para el Registro 
+        // Registra un nuevo usuario y retorna el ID autogenerado por la base de datos
         public int insertarNuevo(Usuario nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // El OUTPUT INSERTED.Id nos da el ID que genera SQL automáticamente
+                // Uso de OUTPUT INSERTED.Id para capturar la clave primaria inmediatamente
                 datos.setearConsulta("Insert into USERS (email, pass, admin) OUTPUT INSERTED.Id values (@email, @pass, 0)");
                 datos.setearParametro("@email", nuevo.Email);
                 datos.setearParametro("@pass", nuevo.Pass);
@@ -76,6 +77,7 @@ namespace negocio
             }
         }
 
+        // Actualiza la información de perfil del usuario (Nombre, Apellido, Imagen)
         public void actualizar(Usuario user)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -86,9 +88,8 @@ namespace negocio
                 datos.setearParametro("@nombre", user.Nombre);
                 datos.setearParametro("@apellido", user.Apellido);
 
-                // Manejamos el nulo de la imagen
+                // Manejo de operador null-coalescing para persistir nulos en la DB
                 datos.setearParametro("@url", (object)user.UrlImagenPerfil ?? DBNull.Value);
-
                 datos.setearParametro("@id", user.Id);
 
                 datos.ejecutarAccion();
@@ -103,12 +104,13 @@ namespace negocio
             }
         }
 
+        // Elimina el usuario y sus registros relacionados para mantener la integridad de la base de datos
         public void eliminar(int id)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // Primero borramos sus favoritos por integridad
+                // Ejecución en cascada manual para limpiar dependencias antes de borrar el registro padre
                 datos.setearConsulta("Delete From FAVORITOS Where IdUser = @id; Delete From USERS Where Id = @id");
                 datos.setearParametro("@id", id);
                 datos.ejecutarAccion();

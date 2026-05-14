@@ -9,17 +9,20 @@ namespace negocio
 {
     public class Seguridad
     {
+        // Verifica si existe un usuario autenticado en la sesión actual
         public static bool sesionActiva(object user)
         {
-            // Si el objeto en sesión no es nulo y tiene un ID válido, está activo
+            // Casteo preventivo: validamos que el objeto no sea nulo antes de tratarlo como Usuario
             dominio.Usuario usuario = user != null ? (dominio.Usuario)user : null;
+
+            // Un ID distinto de 0 indica que el usuario proviene de una persistencia válida en DB
             if (usuario != null && usuario.Id != 0)
                 return true;
             else
                 return false;
         }
 
-
+        // Determina si el usuario en sesión posee privilegios de administrador
         public static bool esAdmin(object user)
         {
             Usuario usuario = user != null ? (Usuario)user : null;

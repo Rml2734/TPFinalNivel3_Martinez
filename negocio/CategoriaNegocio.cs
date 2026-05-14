@@ -9,6 +9,8 @@ namespace negocio
 {
     public class CategoriaNegocio
     {
+        // Obtiene el listado completo de categorías desde la base de datos
+        // Útil para poblar selectores y filtros en la capa de presentación
         public List<Categoria> listar()
         {
             List<Categoria> lista = new List<Categoria>();
@@ -32,7 +34,7 @@ namespace negocio
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ex; // Re-lanzamos la excepción para ser capturada en la capa superior
             }
             finally
             {

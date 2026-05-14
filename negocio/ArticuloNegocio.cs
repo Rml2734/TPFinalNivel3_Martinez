@@ -9,8 +9,7 @@ namespace negocio
 {
     public class ArticuloNegocio
     {
-        // Hemos modificado el listar para que sirva para "traer todos" 
-        // o "traer solo uno" si le pasamos un ID.
+        // Obtiene una lista de artículos. Permite filtrar por un ID específico.
         public List<Articulo> listar(string id = "")
         {
             List<Articulo> lista = new List<Articulo>();
@@ -18,7 +17,7 @@ namespace negocio
 
             try
             {
-                //string consulta = "Select A.Id, Codigo, Nombre, A.Descripcion, ImagenUrl, Precio, M.Descripcion Marca, C.Descripcion Categoria, A.IdMarca, A.IdCategoria From ARTICULOS A, MARCAS M, CATEGORIAS C Where A.IdMarca = M.Id And A.IdCategoria = C.Id ";
+                // Consulta con LEFT JOIN para asegurar la obtención de datos aunque no posean Marca o Categoría
                 string consulta = "Select A.Id, Codigo, Nombre, A.Descripcion, ImagenUrl, Precio, " +
                   "ISNULL(M.Descripcion, 'Sin Marca') Marca, " +
                   "ISNULL(C.Descripcion, 'Sin Categoría') Categoria, " +
@@ -46,6 +45,7 @@ namespace negocio
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Descripcion = (string)datos.Lector["Descripcion"];
 
+                    // Validación de nulos para la URL de imagen
                     if (!(datos.Lector["ImagenUrl"] is DBNull))
                         aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
 
@@ -76,6 +76,7 @@ namespace negocio
             }
         }
 
+        // Persiste un nuevo artículo utilizando parámetros para evitar Inyección SQL
         public void agregar(Articulo nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -104,6 +105,7 @@ namespace negocio
             }
         }
 
+        // Actualiza los datos de un artículo existente
         public void modificar(Articulo art)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -132,6 +134,7 @@ namespace negocio
             }
         }
 
+        // Elimina un registro de la tabla ARTICULOS por ID
         public void eliminar(int id)
         {
             try
@@ -147,6 +150,7 @@ namespace negocio
             }
         }
 
+        // --- Gestión de Favoritos ---
         public void insertarFavorito(int idUser, int idArticulo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -161,7 +165,7 @@ namespace negocio
             finally { datos.cerrarConexion(); }
         }
 
-
+        // Obtiene artículos marcados como favoritos por un usuario específico mediante JOIN
         public List<Articulo> listarFavoritos(int idUser)
         {
             List<Articulo> lista = new List<Articulo>();
@@ -187,6 +191,7 @@ namespace negocio
             finally { datos.cerrarConexion(); }
         }
 
+        // Elimina la relación de favorito entre un usuario y un artículo específico
         public void eliminarFavorito(int idUser, int idArticulo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -201,6 +206,7 @@ namespace negocio
             finally { datos.cerrarConexion(); }
         }
 
+        // Verifica la existencia de un artículo en la lista de favoritos del usuario
         public bool yaEsFavorito(int idUser, int idArticulo)
         {
             AccesoDatos datos = new AccesoDatos();
