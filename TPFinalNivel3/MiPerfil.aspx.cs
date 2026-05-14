@@ -41,7 +41,7 @@ namespace TPFinalNivel3
                 // El Admin no ve el botón eliminar...
                 //if (Seguridad.esAdmin(user))
                 //{
-                  //  btnEliminar.Visible = false; // El Admin no ve el botón, problema resuelto.
+                  //  btnEliminar.Visible = false; // El Admin no ve el botón.
                 //}
             }
 
@@ -89,7 +89,7 @@ namespace TPFinalNivel3
                 // REGLA DE ORO: Un admin no puede auto-eliminarse
                 if (Seguridad.esAdmin(user))
                 {
-                    // Podés mandarlo a una página de error o mostrar un mensaje
+                    // Lo mandamos a una página de error o mostrar un mensaje
                     Session.Add("error", "Por razones de seguridad, las cuentas de administrador no pueden ser eliminadas desde el perfil.");
                     Response.Redirect("Error.aspx", false);
                     return;

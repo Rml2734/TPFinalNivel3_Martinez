@@ -41,7 +41,7 @@ namespace TPFinalNivel3
             }
             catch (Exception ex)
             {
-                // Aquí podrías usar una sesión de error si el profe lo enseñó
+                //  sesión de error 
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Error.aspx");
             }

@@ -28,8 +28,7 @@
                 <asp:RequiredFieldValidator ErrorMessage="El apellido es obligatorio" ControlToValidate="txtApellido" runat="server" CssClass="text-danger" />
             </div>
 
-            <!-- Puedes agregar Fecha de Nacimiento aquí si tu tabla SQL tiene esa columna. 
-                 Si no la tiene, mejor no lo pongas por ahora para no complicar la DB. -->
+            <!--  -->
 
             <div class="mb-3">
                 <label class="form-label">URL Imagen de Perfil</label>

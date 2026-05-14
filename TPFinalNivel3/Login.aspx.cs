@@ -33,7 +33,7 @@ namespace TPFinalNivel3
                 }
                 else
                 {
-                    // Podrías poner un label que diga "Datos incorrectos"
+                    
                     // SI EL LOGIN FALLA:
                     lblError.Text = "Usuario o contraseña incorrectos. Reintenta.";
                     lblError.Visible = true;

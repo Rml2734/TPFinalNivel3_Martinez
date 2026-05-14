@@ -13,13 +13,18 @@
 
                 <%-- 1. Valida que no esté vacío --%>
                 <asp:RequiredFieldValidator ErrorMessage="El email es obligatorio."
-                    ControlToValidate="txtEmail" runat="server" CssClass="text-danger" Display="Dynamic" />
+                    ControlToValidate="txtEmail" 
+                    runat="server" 
+                    CssClass="text-danger" 
+                    Display="Dynamic" />
 
                 <%-- 2. Valida que tenga formato de correo (con @ y .) --%>
                 <asp:RegularExpressionValidator ErrorMessage="Formato de email inválido (ej: usuario@correo.com)."
                     ControlToValidate="txtEmail"
                     ValidationExpression="^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
-                    runat="server" CssClass="text-danger" Display="Dynamic" />
+                    runat="server" 
+                    CssClass="text-danger" 
+                    Display="Dynamic" />
             </div>
 
             <div class="mb-3">
@@ -27,7 +32,10 @@
                 <asp:TextBox runat="server" ID="txtPassword" title="Password" CssClass="form-control" TextMode="Password" />
                 <%-- Valida que no esté vacía --%>
                 <asp:RequiredFieldValidator ErrorMessage="La contraseña es obligatoria."
-                    ControlToValidate="txtPassword" runat="server" CssClass="text-danger" Display="Dynamic" />
+                    ControlToValidate="txtPassword" 
+                    runat="server" 
+                    CssClass="text-danger" 
+                    Display="Dynamic" />
             </div>
 
             <div class="mb-3">
@@ -35,12 +43,18 @@
                 <asp:TextBox runat="server" ID="txtPasswordConfirm" title="Confirm Password" CssClass="form-control" TextMode="Password" />
                 <%-- 1. Valida que no esté vacía --%>
                 <asp:RequiredFieldValidator ErrorMessage="Debes repetir la contraseña."
-                    ControlToValidate="txtPasswordConfirm" runat="server" CssClass="text-danger" Display="Dynamic" />
+                    ControlToValidate="txtPasswordConfirm" 
+                    runat="server" 
+                    CssClass="text-danger" 
+                    Display="Dynamic" />
 
                 <%-- 2. Compara que AMBAS contraseñas sean iguales --%>
                 <asp:CompareValidator ErrorMessage="Las contraseñas no coinciden."
-                    ControlToValidate="txtPasswordConfirm" ControlToCompare="txtPassword"
-                    runat="server" CssClass="text-danger" Display="Dynamic" />
+                    ControlToValidate="txtPasswordConfirm" 
+                    ControlToCompare="txtPassword"
+                    runat="server" 
+                    CssClass="text-danger" 
+                    Display="Dynamic" />
             </div>
 
             <hr />

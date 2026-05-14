@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MiMaster.Master" AutoEventWireup="true" CodeBehind="ListaArticulos.aspx.cs" Inherits="TPFinalNivel3.ListaArticulos" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <%-- Aquí va vacío a menos que necesites CSS específico para esta página --%>
+    <%--  CSS específico para esta página --%>
     <style>
         /* Efecto de cristal y borde redondeado para la tabla */
         .table {
