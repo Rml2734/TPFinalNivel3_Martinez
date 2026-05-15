@@ -15,22 +15,23 @@ namespace TPFinalNivel3
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ArticuloNegocio negocio = new ArticuloNegocio(); //
+            ArticuloNegocio negocio = new ArticuloNegocio(); 
             try
             {
-                // 1. Cargamos la lista desde la DB
-                ListaArticulo = negocio.listar(); //
+                // Solo cargamos y vinculamos datos si es la primera vez que entra a la página
+                if (!IsPostBack) 
+                {
+                    ListaArticulo = negocio.listar(); // 1. Cargamos la lista desde la DB
+                    Session["listaArticulos"] = ListaArticulo; //2. Persistimos en sesión para agilizar el filtrado
 
-                // 2. Le decimos al repetidor de dónde sacar los datos
-                repRepetidor.DataSource = ListaArticulo;
-
-                // 3. ¡IMPORTANTE! Esto vincula los datos con el HTML
-                repRepetidor.DataBind();
+                    repRepetidor.DataSource = ListaArticulo; // 3. Le decimos al repetidor de dónde sacar los datos
+                    repRepetidor.DataBind(); // 4. ¡IMPORTANTE! Esto vincula los datos con el HTML
+                }                       
             }
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                // Por ahora lo mandamos al error si algo falla
+                Response.Redirect("Error.aspx");
             }
         }
 
@@ -59,12 +60,8 @@ namespace TPFinalNivel3
                 {
                     // Solo si NO existe, lo insertamos
                     negocioArt.insertarFavorito(idUser, idArticulo);
-                }
-
-                // TIP: Para saber que funcionó, mandémoslo a la página de favoritos
-                Response.Redirect("Favoritos.aspx", false);
-
-                // Opcional: Podrías poner un mensaje de "Agregado con éxito"
+                }           
+                Response.Redirect("Favoritos.aspx", false);                
             }
             catch (Exception ex)
             {
@@ -73,6 +70,7 @@ namespace TPFinalNivel3
             }
         }
 
+        // Filtro rápido mediante LINQ y manejo de estado en Sesión
         protected void txtFiltro_TextChanged(object sender, EventArgs e)
         {
             // 1. Intentamos traer la lista de la sesión
@@ -86,21 +84,14 @@ namespace TPFinalNivel3
                 Session["listaArticulos"] = lista;
             }
 
-            // 3. Ahora sí filtramos sin miedo al error
+            // 3. Aplicamos filtrado ignorando mayúsculas/minúsculas para mejorar la búsqueda
             List<Articulo> listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()));
             repRepetidor.DataSource = listaFiltrada;
             repRepetidor.DataBind();
 
-            // --- LA MAGIA ESTÁ AQUÍ ---
-            // Si la lista filtrada no tiene elementos, mostramos el mensaje
-            if (listaFiltrada.Count == 0)
-            {
-                lblSinResultados.Visible = true;
-            }
-            else
-            {
-                lblSinResultados.Visible = false;
-            }
+
+            // Gestión de visibilidad del mensaje de resultados vacíos
+            lblSinResultados.Visible = listaFiltrada.Count == 0;
         }
 
 

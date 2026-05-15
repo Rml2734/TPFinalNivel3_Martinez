@@ -9,10 +9,12 @@
         <div class="col-md-6">
             <h2 runat="server" id="lblNombre"></h2>
             <hr />
+
             <p><strong>Código:</strong> <asp:Label ID="lblCodigo" runat="server" /></p>
             <p><strong>Descripción:</strong> <asp:Label ID="lblDescripcion" runat="server" /></p>
             <p><strong>Marca:</strong> <asp:Label ID="lblMarca" runat="server" /></p>
             <p><strong>Categoría:</strong> <asp:Label ID="lblCategoria" runat="server" /></p>
+
             <h3><asp:Label ID="lblPrecio" runat="server" CssClass="badge bg-success" /></h3>
             <div class="mt-4">
                 <a href="Default.aspx" class="btn btn-primary">Regresar</a>
