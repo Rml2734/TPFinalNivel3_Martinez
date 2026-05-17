@@ -14,37 +14,55 @@ namespace TPFinalNivel3
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            // Si no es admin, lo sacamos de aquí
+            // =========================================================================
+            // 1. FILTRO DE SEGURIDAD INTERNA (AUTORIZACIÓN RESTRINGIDA)
+            // =========================================================================
+            // Validamos preventivamente que exista sesión activa y que posea el rol de Administrador
             if (!(Seguridad.sesionActiva(Session["usuario"]) && ((dominio.Usuario)Session["usuario"]).Admin))
             {
-                Session.Add("error", "No tienes permisos de administrador para acceder a esta pantalla.");
+                Session.Add("error", "No tienes credenciales de administrador para acceder a este módulo de gestión.");
                 Response.Redirect("Error.aspx", false);
+                return;
             }
 
-            // Solo cargamos si no es un Postback para no perder eficiencia
+            // =========================================================================
+            // 2. CICLO DE VIDA: CARGA INICIAL DE LA GRILLA ADMINISTRATIVA
+            // =========================================================================
             if (!IsPostBack)
             {
                 ArticuloNegocio negocio = new ArticuloNegocio();
-                dgvArticulos.DataSource = negocio.listar();
+                List<Articulo> listaOriginal = negocio.listar();
+
+                // Mapeo inicial hacia el origen de datos de la interfaz gráfica (UI)
+                dgvArticulos.DataSource = listaOriginal;
                 dgvArticulos.DataBind();
+
+                // Almacenamos la colección en Sesión para optimizar el rendimiento del filtrado en memoria
+                Session.Add("listaArticulos", listaOriginal);
             }
         }
 
+        // =========================================================================
+        // 3. CONTROLADORES DE EVENTOS DE INTERFAZ (ACCIONES DE GRILLA Y FILTROS)
+        // =========================================================================
         protected void dgvArticulos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Usamos el DataKeyNames="Id" que pusimos en el ASPX
+            // Rompemos el encapsulamiento de la fila seleccionada usando la directiva DataKeyNames de la UI
             string id = dgvArticulos.SelectedDataKey.Value.ToString();
 
-            // Redirigimos al formulario pasando el ID por la URL (QueryString)
+            // Redirección controlada al formulario de edición inyectando el ID por QueryString
             Response.Redirect("FormularioArticulo.aspx?id=" + id);
         }
 
+        // =========================================================================
+        // Controlador de eventos que ejecuta el filtrado predictivo de artículos en memoria interna.
+        // =========================================================================
         protected void txtFiltro_TextChanged(object sender, EventArgs e)
         {
-            // Recuperamos la lista de la sesión
+            // Desencapsulamos la lista original almacenada de forma segura en el estado de sesión
             List<dominio.Articulo> listaOriginal = (List<dominio.Articulo>)Session["listaArticulos"];
 
-            // SEGURIDAD: Si por alguna razón la sesión es null, recargamos la lista desde el negocio
+            // Mecanismo de Contingencia: Si la sesión expiró o es nula, rehidratamos los datos desde la DB
             if (listaOriginal == null)
             {
                 ArticuloNegocio negocio = new ArticuloNegocio();
@@ -52,11 +70,11 @@ namespace TPFinalNivel3
                 Session.Add("listaArticulos", listaOriginal);
             }
 
-            // Filtramos
+            // Aplicación de Filtro Reactivo mediante Expresiones Lambda (Normalización a mayúsculas para evitar Case-Sensitivity)
             List<dominio.Articulo> listaFiltrada = listaOriginal.FindAll(x =>
                 x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()));
 
-            // Actualizamos el Grid
+            // Sincronización visual inmediata de la grilla basada en los registros coincidentes
             dgvArticulos.DataSource = listaFiltrada;
             dgvArticulos.DataBind();
         }

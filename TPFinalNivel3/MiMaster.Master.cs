@@ -13,53 +13,71 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 1. Por defecto, estas opciones están ocultas para todos
+            // =========================================================================
+            // 1. CONTROL DE RECURSOS ESTÁTICOS SEGÚN ENTORNO (AUTOMATIZACIÓN FAVICON)
+            // =========================================================================
+            string url = Request.Url.ToString();
+
+            if (url.Contains("localhost"))
+            {
+                // Entorno Local: Inyección directa para mitigar bloqueos de Brave Shields en HTTP
+                favicon.Attributes["href"] = "Images/carro-de-la-compra.png";
+            }
+            else
+            {
+                // Entorno Producción (Railway): Resolución relativa a la raíz bajo HTTPS
+                favicon.Attributes["href"] = ResolveUrl("~/Images/carro-de-la-compra.png");
+            }
+
+            // =========================================================================
+            // 2. CONTROL DE ACCESOS Y VISIBILIDAD DE INTERFAZ SEGÚN ROLES (SEGURIDAD)
+            // =========================================================================
+            
+            // Por defecto, ocultamos las opciones restringidas para usuarios anónimos
             liFavoritos.Visible = false;
             liListaArticulos.Visible = false;
 
-            // 2. Si hay una sesión activa, revisamos qué permisos tiene
+            // Evaluamos si el cliente posee una sesión de usuario válida y activa
             if (Seguridad.sesionActiva(Session["usuario"]))
             {
                 Usuario user = (Usuario)Session["usuario"];
 
-                // El usuario logueado (sea quien sea) puede ver sus favoritos
+                // Autorización Base: Cualquier usuario autenticado tiene acceso a sus favoritos
                 liFavoritos.Visible = true;
 
-                // 3. SOLO si el usuario es Admin, le mostramos la gestión de artículos
+                // AUTORIZACION ELEVADA: Modificación restringida estrictamente al rol de Administrador
                 if (user.Admin)
                 {
                     liListaArticulos.Visible = true;
                 }
 
-                // Cargamos los datos de perfil (Email y Foto) que ya teníamos...
+                // Mapeo de identidad del perfil autenticado hacia la interfaz gráfica (UI)
                 lblUser.Text = user.Email;
+
                 if (!string.IsNullOrEmpty(user.UrlImagenPerfil))
                 {
-                    // Si tiene foto, la cargamos
-                    //imgAvatar.ImageUrl = "~/Images/" + user.UrlImagenPerfil; // Asumiendo que las guardas en una carpeta /Images/
+                    // Si tiene foto, la cargamos               
                     imgAvatar.ImageUrl = user.UrlImagenPerfil;
                 }
                 else
                 {
-                    // Si NO tiene foto, cargamos un placeholder por defecto
+                    // Fallback visual: Si el perfil carece de avatar, inyectamos un placeholder estandarizado
                     imgAvatar.ImageUrl = "https://www.pngkit.com/png/full/301-3012694_account-user-profile-avatar-comments-fa-user-circle.png";
                 }
 
-            }
-
-            // Si existe una sesión de usuario (esto lo definiremos al programar el login)
-            //if (Session["usuario"] != null)
-            //{
-              //  liFavoritos.Visible = true;
-                // Aquí también podrías ocultar los botones de Login/Registro
-            //}
+            }        
         }
 
+        // =========================================================================
+        // 3. CONTROLADORES DE EVENTOS DE INTERFAZ (GESTIÓN DE SESIÓN DE USUARIO)
+        // =========================================================================
         protected void btnSalir_Click(object sender, EventArgs e)
         {
-            // Limpiamos la sesión y mandamos al Login
-            Session.Abandon(); // Mata la sesión
-            Session.Clear();   // Limpia todas las variables
+            // Destrucción del estado de sesión en el servidor y vaciado completo de variables en memoria
+            Session.Abandon();
+            Session.Clear();
+
+            // Redirección segura al formulario de autenticación mitigando sobrecarga de hilos
             Response.Redirect("Login.aspx");
         }
     }

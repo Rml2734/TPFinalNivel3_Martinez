@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <%--  CSS específico para esta página --%>
     <style>
-        /* Efecto de cristal y borde redondeado para la tabla */
+        /* Estructura moderna con bordes redondeados y aislamiento de desbordamiento */
         .table {
             border-collapse: separate;
             border-spacing: 0;
@@ -11,27 +11,27 @@
             overflow: hidden;
         }
 
-            /* Color de encabezado elegante */
+            /* Encabezado sólido basado en la paleta principal de Bootstrap */
             .table thead {
                 background-color: #0d6efd;
                 color: white;
             }
 
-        /* El efecto Hover personalizado */
+        /* Transición suavizada para interactividad táctil y de mouse (Hover) */
         .table-hover tbody tr:hover {
             background-color: rgba(13, 110, 253, 0.1) !important; /* Un azul muy suave */
             transition: background-color 0.3s ease;
             cursor: pointer;
         }
 
-        /* Ajuste para Modo Oscuro en la grilla */
+        /* Reglas adaptativas para la grilla en entornos de Modo Oscuro */
         [data-bs-theme="dark"] .table {
             color: #e0e0e0;
             border-color: #444;
         }
 
         [data-bs-theme="dark"] .table-hover tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important; /* Resalte sutil en oscuro */
+            background-color: rgba(255, 255, 255, 0.05) !important;
         }
 
         /* Estilo para las celdas */
@@ -54,8 +54,15 @@
 
                 <div class="row mb-3">
                     <div class="col-6">
-                        <asp:Label Text="Filtrar por nombre:" runat="server" />
-                        <asp:TextBox runat="server" ID="txtFiltro" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged" />
+                        <asp:Label Text="Filtrar por nombre:" 
+                             runat="server" 
+                             CssClass="form-label fw-bold" 
+                             AssociatedControlID="txtFiltro" />
+                        <asp:TextBox runat="server" ID="txtFiltro" 
+                            CssClass="form-control" 
+                            AutoPostBack="true" 
+                            OnTextChanged="txtFiltro_TextChanged" 
+                            placeholder="Escribe para buscar..." />
                     </div>
                 </div>
 
@@ -69,12 +76,15 @@
                         <asp:BoundField HeaderText="Código" DataField="Codigo" />
                         <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
                         <asp:BoundField HeaderText="Marca" DataField="Marca.Descripcion" />
-                        <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />
-                        <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:C}" />
+                        <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />                       
+                        <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:F2}" HtmlEncode="false" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right" />
                         <asp:CommandField HeaderText="Acción" ShowSelectButton="true" SelectText="✍️ Editar" ControlStyle-CssClass="btn btn-outline-primary btn-sm" />
                     </Columns>
                 </asp:GridView>
-                <a href="FormularioArticulo.aspx" class="btn btn-success">Agregar Nuevo</a>
+
+                <div class="mt-3">
+                    <a href="FormularioArticulo.aspx" class="btn btn-success px-4">Agregar Nuevo Artículo</a>
+                </div>
             </div>
         </div>
     </div>

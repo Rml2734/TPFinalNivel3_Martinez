@@ -11,10 +11,20 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Verificamos si existe un mensaje de excepción almacenado en el estado de sesión
             if (Session["error"] != null)
             {
-                // Asumiendo que tienes un Label con ID="lblMensaje" en Error.aspx
+                // Inyectamos el mensaje de error en el Label animado del frontend
                 lblMensaje.Text = Session["error"].ToString();
+
+                // Buena práctica: Limpiamos la variable de sesión para liberar memoria 
+                // y evitar que el mismo error se muestre si el usuario recarga la página a mano
+                Session["error"] = null;
+            }
+            else
+            {
+                // Si acceden a Error.aspx directamente sin haber disparado un error real
+                lblMensaje.Text = "Se ha producido un error inesperado en el sistema.";
             }
         }
     }

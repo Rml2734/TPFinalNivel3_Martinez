@@ -72,6 +72,7 @@
     <Content Include="Favoritos.aspx" />
     <Content Include="FormularioArticulo.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Images\carro-de-la-compra.png" />
     <Content Include="ListaArticulos.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="MiPerfil.aspx" />

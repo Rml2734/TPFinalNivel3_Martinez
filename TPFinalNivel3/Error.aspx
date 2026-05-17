@@ -1,15 +1,15 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MiMaster.Master" AutoEventWireup="true" CodeBehind="Error.aspx.cs" Inherits="TPFinalNivel3.Error" %>
+﻿<%@ Page Title="Error - Mi Catálogo" Language="C#" MasterPageFile="~/MiMaster.Master" AutoEventWireup="true" CodeBehind="Error.aspx.cs" Inherits="TPFinalNivel3.Error" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <style>
-        /* Definimos la animación de la alerta */
+        /* Animación sutil de alerta mediante transformaciones y opacidad */
         @keyframes parpadeo-alerta {
             0% {
                 color: #dc3545;
                 opacity: 1;
             }
-            /* Rojo de Bootstrap */
+            /* Rojo  */
             50% {
                 color: #ff0000;
                 opacity: 0.5;
@@ -23,7 +23,7 @@
         }
 
         .mensaje-peligro {
-            animation: parpadeo-alerta 1s infinite; /* Se repite cada segundo para siempre */
+            animation: parpadeo-alerta 1.5s infinite ease-in-out; /*  */
             display: inline-block;
             font-weight: bold;
         }
@@ -46,7 +46,8 @@
             </div>
 
             <div class="mt-4">
-                <a class="btn btn-primary btn-lg rounded-pill px-5 shadow" href="Default.aspx" role="button">Volver al Inicio
+                <a class="btn btn-primary btn-lg rounded-pill px-5 shadow" href="Default.aspx" role="button">
+                    Volver al Inicio
                 </a>
             </div>
         </div>

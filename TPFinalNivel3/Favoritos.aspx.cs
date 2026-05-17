@@ -13,53 +13,80 @@ namespace TPFinalNivel3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 1. Si no hay sesión, no hay favoritos que mostrar
+            // =========================================================================
+            // 1. FILTRO DE SEGURIDAD INTERNA (PROTECCIÓN DE RUTA)
+            // =========================================================================
+            // Validamos preventivamente que exista un token de sesión válido antes de renderizar
             if (!Seguridad.sesionActiva(Session["usuario"]))
             {
+                // Redirección preventiva con endResponse en false para mitigar interrupciones de hilo
                 Response.Redirect("Login.aspx", false);
                 return;
             }
 
+            // =========================================================================
+            // 2. CICLO DE VIDA: CARGA INICIAL DE LA VISTA
+            // =========================================================================
             if (!IsPostBack)
             {
-                // 2. Cargamos la lista
+                // Invocamos la carga del origen de datos únicamente en la primera petición
                 cargarFavoritos();
             }
         }
 
+        // =========================================================================
+        // 2. MÉTODOS DE CARGA DE DATOS (BACKEND LÓGICA)
+        // =========================================================================
         private void cargarFavoritos()
         {
-            ArticuloNegocio negocio = new ArticuloNegocio();
-            // 3. Obtenemos el ID del usuario logueado
-            int idUser = ((Usuario)Session["usuario"]).Id;
+            try
+            {
+                // Instanciamos la capa de negocio para acceder a los datos relacionales
+                ArticuloNegocio negocio = new ArticuloNegocio();
 
-            // 4. Llamamos a tu nuevo método y lo pegamos al Repetidor
-            repFavoritos.DataSource = negocio.listarFavoritos(idUser);
-            repFavoritos.DataBind();
-        
+                // Desencapsulamos el ID único de la entidad Usuario almacenada en la Sesión
+                int idUser = ((Usuario)Session["usuario"]).Id;
+
+                // Mapeo directo de la colección de negocio al control de repetición de datos (Repeater)
+                repFavoritos.DataSource = negocio.listarFavoritos(idUser);
+                repFavoritos.DataBind();
+            }
+            catch (Exception ex)
+            {
+                // Enrutamiento centralizado de excepciones hacia la UI de contingencia
+                Session.Add("error", "Error crítico al intentar mapear la lista de favoritos.");
+                Response.Redirect("Error.aspx", false);
+            }
+
         }
 
+        // =========================================================================
+        // 3. CONTROLADORES DE EVENTOS DE INTERFAZ (EVENT HANDLERS)
+        // =========================================================================
         protected void btnEliminarFav_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Capturamos el ID del artículo del botón que se clickeó
+                // Rompemos el encapsulamiento del control remitente (sender) para extraer su argumento de comando
                 int idArticulo = int.Parse(((LinkButton)sender).CommandArgument);
 
-                // 2. Obtenemos el ID del usuario logueado
+                // Recuperamos las credenciales de identidad del usuario en sesión
                 int idUser = ((dominio.Usuario)Session["usuario"]).Id;
 
-                // 3. Ejecutamos la eliminación en la DB
+                // Ejecutamos la eliminación en la DB
                 ArticuloNegocio negocio = new ArticuloNegocio();
+
+                // Transacción: Remoción física del registro relacional en la tabla de favoritos (DB)
                 negocio.eliminarFavorito(idUser, idArticulo);
 
-                // 4. Recargamos la lista para que el producto desaparezca de la vista inmediatamente
+                // Sincronización visual inmediata: Re-enlazamos los datos para actualizar la UI sin recargar la página completa
                 cargarFavoritos();
             }
             catch (Exception ex)
             {
-                Session.Add("error", ex.ToString());
-                Response.Redirect("Error.aspx");
+                // Captura y aislamiento de fallas en transacciones de datos relacionales
+                Session.Add("error", "No se pudo remover el artículo de tu lista de favoritos.");
+                Response.Redirect("Error.aspx", false);
             }
         }
     }

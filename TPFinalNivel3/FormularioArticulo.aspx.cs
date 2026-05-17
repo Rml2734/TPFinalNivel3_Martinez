@@ -14,11 +14,15 @@ namespace TPFinalNivel3
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            // Si no es admin, lo sacamos de aquí
+            // =========================================================================
+            // 1. FILTRO DE SEGURIDAD INTERNA (AUTORIZACIÓN RESTRINGIDA)
+            // =========================================================================
+            // Validamos que exista una sesión activa y que posea explícitamente el rol de Administrador
             if (!(Seguridad.sesionActiva(Session["usuario"]) && ((dominio.Usuario)Session["usuario"]).Admin))
             {
                 Session.Add("error", "No tienes permisos de administrador para acceder a esta pantalla.");
                 Response.Redirect("Error.aspx", false);
+                return;
             }
 
 
@@ -27,26 +31,30 @@ namespace TPFinalNivel3
 
             try
             {
-                //1 Solo cargamos los desplegables la primera vez que entra a la página
+                // =========================================================================
+                // 2. CICLO DE VIDA: CARGA INICIAL Y MAPEADO DE INTERFAZ
+                // =========================================================================
                 if (!IsPostBack)
                 {
                     // CARGA DE DESPLEGABLES (Marcas y Categorías)
                     MarcaNegocio marcaNegocio = new MarcaNegocio();
                     CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
 
-                    // Cargamos Marcas
+                    // Carga y vinculación de Marcas
                     ddlMarca.DataSource = marcaNegocio.listar();
-                    ddlMarca.DataValueField = "Id";       // Lo que se guarda (el ID)
-                    ddlMarca.DataTextField = "Descripcion"; // Lo que el usuario ve
+                    ddlMarca.DataValueField = "Id";       
+                    ddlMarca.DataTextField = "Descripcion"; 
                     ddlMarca.DataBind();
 
-                    // Cargamos Categorías
+                    // Carga y vinculación de Categorías
                     ddlCategoria.DataSource = categoriaNegocio.listar();
                     ddlCategoria.DataValueField = "Id";
                     ddlCategoria.DataTextField = "Descripcion";
                     ddlCategoria.DataBind();
 
-                    // 2. ¿ESTAMOS EDITANDO? (Detección de ID)
+                    // =========================================================================
+                    // 3. DETECCIÓN DE ESTADO: MODO EDICIÓN VS MODO CREACIÓN
+                    // =========================================================================
                     string id = Request.QueryString["id"] != null ? Request.QueryString["id"].ToString() : "";
 
                     if (id != "")
@@ -55,7 +63,7 @@ namespace TPFinalNivel3
                         // Traemos la lista filtrada por ID
                         List<Articulo> lista = negocio.listar(id);
 
-                        // VERIFICACIÓN DEL ID FANTASMA
+                        // Validación preventiva ante inyección de IDs inexistentes en la URL
                         if (lista.Count > 0)
                         {
                             btnEliminar.Visible = true;
@@ -66,13 +74,12 @@ namespace TPFinalNivel3
                             txtNombre.Text = seleccionado.Nombre;
                             txtDescripcion.Text = seleccionado.Descripcion;
                             ID_txtImagenUrl.Text = seleccionado.ImagenUrl;
-
-                            // Formato de precio para que el validador no salte
-                            txtPrecio.Text = seleccionado.Precio.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-
                             imgArticulo.ImageUrl = seleccionado.ImagenUrl;
 
-                            // Selección de desplegables
+                            // Normalización de formato monetario para compatibilidad de validadores cliente
+                            txtPrecio.Text = seleccionado.Precio.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+
+                            // Sincronización de índices seleccionados en desplegables
                             ddlMarca.SelectedValue = seleccionado.Marca.Id.ToString();
                             ddlCategoria.SelectedValue = seleccionado.Categoria.Id.ToString();
 
@@ -82,7 +89,7 @@ namespace TPFinalNivel3
                         }
                         else
                         {
-                            // SI EL ID NO EXISTE (Ej: 999999)
+                            // Redirección controlada si el ID fue modificado arbitrariamente en la URL (Ej: 999999)
                             Session.Add("error", "El artículo con ID " + id + " no existe en el sistema.");
                             Response.Redirect("Error.aspx", false);
                         }
@@ -91,14 +98,17 @@ namespace TPFinalNivel3
             }
             catch (Exception ex)
             {
-                Session.Add("error", ex.ToString());
+                Session.Add("error", "Error crítico en el ciclo de carga del formulario: " + ex.Message);
                 Response.Redirect("Error.aspx");
             }
         }
 
+        // =========================================================================
+        // 4. CONTROLADORES DE EVENTOS DE INTERFAZ (ACCIONES TRANSACCIONALES)
+        // =========================================================================
         protected void btnAceptar_Click(object sender, EventArgs e)
         {
-            // PRIMERO: Validamos que los campos cumplan las reglas (Nombre, Precio, etc.)
+            // Validación preventiva en el servidor del estado de las reglas de negocio (Nombre, Precio, etc.)
             if (!Page.IsValid)
                 return;
 
@@ -126,6 +136,7 @@ namespace TPFinalNivel3
                 nuevo.Marca = new Marca();
                 nuevo.Marca.Id = int.Parse(ddlMarca.SelectedValue);
 
+
                 nuevo.Categoria = new Categoria();
                 nuevo.Categoria.Id = int.Parse(ddlCategoria.SelectedValue);
 
@@ -141,17 +152,14 @@ namespace TPFinalNivel3
                     negocio.agregar(nuevo);
                 }
 
-                // 4. Llamamos al método de negocio para que lo mande a la DB
-                //negocio.agregar(nuevo);
-
-                // 5. Si todo sale bien, volvemos a la lista
+                // 4. Finalización exitosa y retorno al catálogo maestro de administración
                 Response.Redirect("ListaArticulos.aspx", false);
             }
             catch (Exception ex)
             {
                 // Si algo falla, el parpadeo rojo nos avisará qué pasó
-                Session.Add("error", ex.ToString());
-                Response.Redirect("Error.aspx");
+                Session.Add("error", "Error transaccional al intentar persistir el artículo: " + ex.Message);
+                Response.Redirect("Error.aspx", false);
             }
         }
 
