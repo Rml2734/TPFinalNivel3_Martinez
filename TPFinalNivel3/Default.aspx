@@ -9,7 +9,7 @@
     <div class="row mb-4">
         <div class="col-6">
             <div class="input-group">
-                <span class="input-group-text">🔍</span>
+                <span class="input-group-text  border-end-0">🔍</span>
                 <asp:TextBox runat="server" ID="txtFiltro" CssClass="form-control"
                     placeholder="Buscar por nombre..." AutoPostBack="true"
                     OnTextChanged="txtFiltro_TextChanged" />
@@ -18,12 +18,10 @@
     </div>
 
     <!-- Mensaje informativo en caso de no encontrar coincidencias -->
-    <div class="text-center mt-5">
-        <asp:Label ID="lblSinResultados" runat="server"
-            Text="No se encontraron artículos que coincidan con tu búsqueda... ☹️"
-            CssClass="h4 text-muted"
-            Visible="false" />
-    </div>
+    <asp:Panel ID="pnlSinResultados" runat="server" Visible="false" 
+            CssClass="alert alert-warning text-center fw-bold my-4 p-3 rounded shadow-sm">
+            ⚠️ No se encontraron artículos que coincidan con tu búsqueda. Intenta con un criterio diferente.
+        </asp:Panel>
 
     <div class="container text-center">
         <div class="row row-cols-1 row-cols-md-4 g-4">

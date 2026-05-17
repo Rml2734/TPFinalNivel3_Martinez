@@ -91,7 +91,9 @@ namespace TPFinalNivel3
 
 
             // Gestión de visibilidad del mensaje de resultados vacíos
-            lblSinResultados.Visible = listaFiltrada.Count == 0;
+            //lblSinResultados.Visible = listaFiltrada.Count == 0;
+
+            pnlSinResultados.Visible = true;
         }
 
 

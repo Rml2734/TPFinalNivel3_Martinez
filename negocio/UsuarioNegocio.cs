@@ -9,7 +9,10 @@ namespace negocio
 {
     public class UsuarioNegocio
     {
-        // Valida las credenciales del usuario y mapea sus datos de perfil si son correctos
+
+        // =========================================================================
+        // 1. PROCEDIMIENTOS DE AUTENTICACIÓN Y ACCESO DE IDENTIDAD
+        // =========================================================================
         public bool Loguear(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -53,7 +56,9 @@ namespace negocio
             }
         }
 
+        // =========================================================================
         // Registra un nuevo usuario y retorna el ID autogenerado por la base de datos
+        // =========================================================================
         public int insertarNuevo(Usuario nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -77,7 +82,9 @@ namespace negocio
             }
         }
 
+        // =========================================================================
         // Actualiza la información de perfil del usuario (Nombre, Apellido, Imagen)
+        // =========================================================================
         public void actualizar(Usuario user)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -104,7 +111,9 @@ namespace negocio
             }
         }
 
+        // =========================================================================
         // Elimina el usuario y sus registros relacionados para mantener la integridad de la base de datos
+        // =========================================================================
         public void eliminar(int id)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -119,6 +128,36 @@ namespace negocio
             finally { datos.cerrarConexion(); }
         }
 
+        // =========================================================================
+        // VALIDACIÓN DE IDENTIDADES REPETIDAS (INTEGRIDAD DE DATOS)
+        // =========================================================================
+        public bool verificarCorreoExistente(string email)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Corregido: Apuntamos a la tabla real 'USERS' según el script de SQL
+                datos.setearConsulta("SELECT Id FROM USERS WHERE email = @email");
+                datos.setearParametro("@email", email);
+                datos.ejecutarLectura();
+
+                // Si el lector encuentra al menos una fila, el correo ya está ocupado
+                if (datos.Lector.Read())
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
 
     }
 }

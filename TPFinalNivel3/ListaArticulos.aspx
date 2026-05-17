@@ -39,6 +39,15 @@
             vertical-align: middle;
             padding: 12px;
         }
+
+            /* Fuerza la uniformidad del color de advertencia anulando la herencia de la tabla en Modo Oscuro */
+            .table tr.alert-warning,
+            .table td.alert-warning,
+            .table .alert-warning td {
+                background-color: var(--bs-alert-bg, #fff3cd) !important;
+                color: var(--bs-alert-color, #664d03) !important;
+                border-color: var(--bs-alert-border-color, #ffecb5) !important;
+            }
     </style>
 </asp:Content>
 
@@ -54,14 +63,14 @@
 
                 <div class="row mb-3">
                     <div class="col-6">
-                        <asp:Label Text="Filtrar por nombre:" 
-                             runat="server" 
-                             CssClass="form-label fw-bold" 
-                             AssociatedControlID="txtFiltro" />
-                        <asp:TextBox runat="server" ID="txtFiltro" 
-                            CssClass="form-control" 
-                            AutoPostBack="true" 
-                            OnTextChanged="txtFiltro_TextChanged" 
+                        <asp:Label Text="Filtrar por nombre:"
+                            runat="server"
+                            CssClass="form-label fw-bold"
+                            AssociatedControlID="txtFiltro" />
+                        <asp:TextBox runat="server" ID="txtFiltro"
+                            CssClass="form-control"
+                            AutoPostBack="true"
+                            OnTextChanged="txtFiltro_TextChanged"
                             placeholder="Escribe para buscar..." />
                     </div>
                 </div>
@@ -71,19 +80,21 @@
                     AutoGenerateColumns="false"
                     CssClass="table table-hover shadow-sm"
                     GridLines="None"
-                    UseAccessibleHeader="true">
+                    UseAccessibleHeader="true"
+                    EmptyDataText="⚠️ No se encontraron referencias de artículos que coincidan con el criterio ingresado."
+                    EmptyDataRowStyle-CssClass="alert alert-warning text-center fw-bold my-4 p-3  shadow-sm">
                     <Columns>
                         <asp:BoundField HeaderText="Código" DataField="Codigo" />
                         <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
                         <asp:BoundField HeaderText="Marca" DataField="Marca.Descripcion" />
-                        <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />                       
+                        <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />
                         <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:F2}" HtmlEncode="false" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right" />
-                        <asp:CommandField HeaderText="Acción" ShowSelectButton="true" SelectText="✍️ Editar" ControlStyle-CssClass="btn btn-outline-primary btn-sm" />
+                        <asp:CommandField HeaderText="Acción" ShowSelectButton="true" SelectText="✍️ Editar" ControlStyle-CssClass="btn btn-outline-primary btn-sm px-3 rounded-pill" />
                     </Columns>
                 </asp:GridView>
 
                 <div class="mt-3">
-                    <a href="FormularioArticulo.aspx" class="btn btn-success px-4">Agregar Nuevo Artículo</a>
+                    <a href="FormularioArticulo.aspx" class="btn btn-success px-4 rounded-pill shadow-sm">Agregar Nuevo Artículo</a>
                 </div>
             </div>
         </div>

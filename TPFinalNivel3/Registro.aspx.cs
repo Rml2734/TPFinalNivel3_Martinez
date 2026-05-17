@@ -23,17 +23,31 @@ namespace TPFinalNivel3
         // =========================================================================
         protected void btnRegistro_Click(object sender, EventArgs e)
         {
-            // Si el email no es válido, el código se detiene aquí
+            // Validación preventiva en el servidor del estado de las reglas de entrada
             if (!Page.IsValid)
                 return;
 
             try
-            {    
+            {
                 Usuario user = new Usuario();
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
 
-                // Hidratamos el objeto con las nuevas credenciales de identidad
-                user.Email = txtEmail.Text;
+                // Normalización de la cadena para mitigar ingresos con espacios en blanco fortuitos
+                string emailIngresado = txtEmail.Text.Trim();
+
+                // =========================================================================
+                // CONTROL ANTIDUPLICADOS: VALIDACIÓN DE DISPONIBILIDAD DE CREDENCIALES
+                // =========================================================================
+                if (usuarioNegocio.verificarCorreoExistente(emailIngresado))
+                {
+                    // Inyección asíncrona de notificación nativa en el cliente para alertar conflicto de duplicidad
+                    string script = "alert('El correo electrónico ya se encuentra registrado por otro usuario. Intenta con uno diferente.');";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", script, true);
+                    return; // Interrupción preventiva: Detiene la persistencia antes de afectar la DB
+                }
+
+                // Si las credenciales están disponibles, procedemos con la hidratación
+                user.Email = emailIngresado;
                 user.Pass = txtPassword.Text;
 
                 // Transacción: Inserción física en DB y recuperación del ID autogenerado (Scope Identity)
