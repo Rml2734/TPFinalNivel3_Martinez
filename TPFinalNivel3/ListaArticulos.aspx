@@ -66,8 +66,6 @@
         <h2>Gestión de Artículos</h2>
         <hr />
 
-
-
         <div class="row">
             <div class="col">
 
