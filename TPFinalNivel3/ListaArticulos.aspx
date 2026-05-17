@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <%--  CSS específico para esta página --%>
     <style>
-        /* Estructura moderna con bordes redondeados y aislamiento de desbordamiento */
+        /* Estructura base de la grilla administrativa */
         .table {
             border-collapse: separate;
             border-spacing: 0;
@@ -11,20 +11,23 @@
             overflow: hidden;
         }
 
-            /* Encabezado sólido basado en la paleta principal de Bootstrap */
-            .table thead {
-                background-color: #0d6efd;
-                color: white;
-            }
+        .table thead {
+            background-color: #0d6efd;
+            color: white;
+        }
 
-        /* Transición suavizada para interactividad táctil y de mouse (Hover) */
+        .table td, .table th {
+            vertical-align: middle;
+            padding: 12px;
+        }
+
+        /* Interactividad de filas (Hover) adaptativo según el tema visual */
         .table-hover tbody tr:hover {
-            background-color: rgba(13, 110, 253, 0.1) !important; /* Un azul muy suave */
+            background-color: rgba(13, 110, 253, 0.1) !important;
             transition: background-color 0.3s ease;
             cursor: pointer;
         }
 
-        /* Reglas adaptativas para la grilla en entornos de Modo Oscuro */
         [data-bs-theme="dark"] .table {
             color: #e0e0e0;
             border-color: #444;
@@ -34,20 +37,27 @@
             background-color: rgba(255, 255, 255, 0.05) !important;
         }
 
-        /* Estilo para las celdas */
-        .table td, .table th {
-            vertical-align: middle;
-            padding: 12px;
+        /* =========================================================================
+           BLINDAJE DE ALERTA: ANULA HOVER, BORDES Y HERENCIAS DE TABLA (EMPTY STATE)
+           ========================================================================= */
+        .table tr.alert-warning,
+        .table td.alert-warning,
+        .table .alert-warning td {
+            background-color: var(--bs-alert-bg, #fff3cd) !important;
+            color: var(--bs-alert-color, #664d03) !important;
+            border-color: var(--bs-alert-border-color, #ffecb5) !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
         }
 
-            /* Fuerza la uniformidad del color de advertencia anulando la herencia de la tabla en Modo Oscuro */
-            .table tr.alert-warning,
-            .table td.alert-warning,
-            .table .alert-warning td {
-                background-color: var(--bs-alert-bg, #fff3cd) !important;
-                color: var(--bs-alert-color, #664d03) !important;
-                border-color: var(--bs-alert-border-color, #ffecb5) !important;
-            }
+        /* Desactiva explícitamente el cambio a gris al pasar el mouse sobre la alerta */
+        .table-hover tbody tr.alert-warning:hover,
+        .table-hover tbody tr:has(.alert-warning):hover,
+        .table-hover tbody tr.alert-warning:hover td {
+            background-color: var(--bs-alert-bg, #fff3cd) !important;
+            background: var(--bs-alert-bg, #fff3cd) !important;
+            cursor: default;
+        }
     </style>
 </asp:Content>
 
@@ -82,7 +92,7 @@
                     GridLines="None"
                     UseAccessibleHeader="true"
                     EmptyDataText="⚠️ No se encontraron referencias de artículos que coincidan con el criterio ingresado."
-                    EmptyDataRowStyle-CssClass="alert alert-warning text-center fw-bold my-4 p-3  shadow-sm">
+                    EmptyDataRowStyle-CssClass="alert alert-warning text-center fw-bold my-4 p-3 shadow-sm d-block">
                     <Columns>
                         <asp:BoundField HeaderText="Código" DataField="Codigo" />
                         <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
