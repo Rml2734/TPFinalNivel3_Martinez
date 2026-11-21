@@ -53,10 +53,11 @@ Nota técnica: como el sitio corre en Mono, en `ListaArticulos.aspx` se usa `Eva
 3. La conexión local usa SQL Server Express con autenticación de Windows (ver negocio/AccesoDatos.cs). Para otro servidor, definir la variable de entorno CATALOGO_CONNECTION con la cadena de conexión completa.
 4. Ejecutar con IIS Express (F5).
 
-## Usuario de prueba
+## Usuarios de prueba
 
-- Administrador: `admin@admin.com`
-- Contraseña: *(se entrega al docente por separado)*
+- **Administrador:** `admin@admin.com`
+- **Usuario estándar:** `test@test.com`
+- **Contraseñas:** *(se entregan al docente por separado)*
 
 ## Autor
 
