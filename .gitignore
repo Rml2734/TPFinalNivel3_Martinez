@@ -2,4 +2,7 @@
 [Bb]in/
 [Oo]bj/
 packages/
-*.user
+*.userTPFinalNivel3/Properties/PublishProfiles/
+
+TPFinalNivel3/Properties/PublishProfiles/
+*.csproj.user

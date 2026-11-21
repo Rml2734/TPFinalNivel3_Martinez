@@ -18,6 +18,7 @@ namespace TPFinalNivel3
             // 1. FILTRO DE SEGURIDAD INTERNA (AUTORIZACIÓN RESTRINGIDA)
             // =========================================================================
             // Validamos preventivamente que exista sesión activa y que posea el rol de Administrador
+
             if (!(Seguridad.sesionActiva(Session["usuario"]) && ((dominio.Usuario)Session["usuario"]).Admin))
             {
                 Session.Add("error", "No tienes credenciales de administrador para acceder a este módulo de gestión.");

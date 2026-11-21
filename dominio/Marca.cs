@@ -12,7 +12,7 @@ namespace dominio
         public int Id { get; set; }
         public string Descripcion { get; set; }
 
-
+        //PRUEBA winSCP
         // Sobreescritura del método ToString para optimizar el enlace de datos (Data Binding)
         // en controles de selección de la interfaz de usuario (UI)
         public override string ToString() 

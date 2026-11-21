@@ -94,8 +94,22 @@
                     <Columns>
                         <asp:BoundField HeaderText="Código" DataField="Codigo" />
                         <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
+
+                        <%-- COMENTAMOS LOS VIEJOS QUE DABAN ERROR EN MONO 
+                         
                         <asp:BoundField HeaderText="Marca" DataField="Marca.Descripcion" />
-                        <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />
+                        <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" /> 
+                                  
+                        
+
+                        <asp:BoundField HeaderText="Marca" DataField="MarcaDescripcion" />
+                        <asp:BoundField HeaderText="Categoría" DataField="CategoriaDescripcion" />
+
+                        --%>
+
+                        <asp:TemplateField HeaderText="Marca"><ItemTemplate><%# Eval("Marca.Descripcion") %></ItemTemplate></asp:TemplateField>
+                        <asp:TemplateField HeaderText="Categoría"><ItemTemplate><%# Eval("Categoria.Descripcion") %></ItemTemplate></asp:TemplateField>
+
                         <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:F2}" HtmlEncode="false" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right" />
                         <asp:CommandField HeaderText="Acción" ShowSelectButton="true" SelectText="✍️ Editar" ControlStyle-CssClass="btn btn-outline-primary btn-sm px-3 rounded-pill" />
                     </Columns>

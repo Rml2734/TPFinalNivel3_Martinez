@@ -19,6 +19,16 @@ namespace dominio
         public Marca Marca { get; set; } // Objeto, no solo el ID
         public Categoria Categoria { get; set; } // Objeto
 
+        // Propiedades planas para el GridView (Mono no resuelve "Marca.Descripcion")
+        public string MarcaDescripcion
+        {
+            get { return Marca != null ? Marca.Descripcion : ""; }
+        }
+
+        public string CategoriaDescripcion
+        {
+            get { return Categoria != null ? Categoria.Descripcion : ""; }
+        }
 
         public string ImagenUrl { get; set; }
 

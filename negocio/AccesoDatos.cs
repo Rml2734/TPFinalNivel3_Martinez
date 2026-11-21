@@ -19,13 +19,13 @@ namespace negocio
 
         public AccesoDatos()
         {
-            // Configuración de la conexión local para entorno de desarrollo
-            conexion = new SqlConnection("server=.\\SQLEXPRESS; database=CATALOGO_WEB_DB; integrated security=true");
+            // La cadena real se lee de la variable de entorno CATALOGO_CONNECTION (servidor).
+            // Si no existe, se usa la conexión local de desarrollo (sin contraseña).
+            string cadena = Environment.GetEnvironmentVariable("CATALOGO_CONNECTION");
+            if (string.IsNullOrEmpty(cadena))
+                cadena = "server=.\\SQLEXPRESS; database=CATALOGO_WEB_DB; integrated security=true";
 
-            // CONEXIÓN RAILWAY (La desbloquearemos )
-            // "Server=sqlserver.proxy.rlwy.net,12345;Database=CATALOGO_WEB_DB;User Id=sa;Password=tu_password_de_railway;"
-            // conexion = new SqlConnection("ACÁ_IRÁ_EL_STRING_DE_RAILWAY");
-
+            conexion = new SqlConnection(cadena);
             comando = new SqlCommand();
         }
 
